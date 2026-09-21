@@ -1,0 +1,291 @@
+{
+  "customers": [],
+  "stamps": [],
+  "redemptions": [],
+  "menu": [
+    {
+      "id": "cw-1",
+      "category": "classic",
+      "categoryLabel": "Classic Waffles",
+      "name": "Belgium Chocolate Waffle",
+      "description": "Crisp waffle smothered in warm, premium Belgian chocolate.",
+      "price": 89,
+      "badge": "Popular",
+      "image": "https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Classic",
+        "Belgian Chocolate"
+      ]
+    },
+    {
+      "id": "cw-2",
+      "category": "classic",
+      "categoryLabel": "Classic Waffles",
+      "name": "White Chocolate Waffle",
+      "description": "Fresh hot waffle glazed with creamy, smooth white chocolate.",
+      "price": 89,
+      "badge": "Sweet & Creamy",
+      "image": "https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "White Chocolate",
+        "Sweet"
+      ]
+    },
+    {
+      "id": "cw-3",
+      "category": "classic",
+      "categoryLabel": "Classic Waffles",
+      "name": "Dark Chocolate Waffle",
+      "description": "Intense, rich dark chocolate spread over golden crispy waffle.",
+      "price": 89,
+      "badge": "Rich Cocoa",
+      "image": "https://images.unsplash.com/photo-1568051243851-f9b136146e97?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Dark Chocolate",
+        "Intense"
+      ]
+    },
+    {
+      "id": "cw-4",
+      "category": "classic",
+      "categoryLabel": "Classic Waffles",
+      "name": "Coffee Chocolate Waffle",
+      "description": "Aromatic roasted coffee blend infused with luscious chocolate drizzle.",
+      "price": 89,
+      "badge": "Barista Special",
+      "image": "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Coffee",
+        "Mocha"
+      ]
+    },
+    {
+      "id": "dc-1",
+      "category": "double",
+      "categoryLabel": "Double Chocolate",
+      "name": "Chocolate Overload Waffle",
+      "description": "Double shot of rich melted chocolate covering every crispy waffle square.",
+      "price": 99,
+      "badge": "Bestseller",
+      "image": "https://images.unsplash.com/photo-1568051243851-f9b136146e97?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Overload",
+        "Double Chocolate"
+      ]
+    },
+    {
+      "id": "dc-2",
+      "category": "double",
+      "categoryLabel": "Double Chocolate",
+      "name": "White & Dark Waffle",
+      "description": "The iconic yin-yang harmony of silky white and bold dark chocolate.",
+      "price": 99,
+      "badge": "Top Pick",
+      "image": "https://images.unsplash.com/photo-1554520735-0a6b8b6ce8b7?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Dual Chocolate",
+        "Favorite"
+      ]
+    },
+    {
+      "id": "dc-3",
+      "category": "double",
+      "categoryLabel": "Double Chocolate",
+      "name": "Triple Chocolate Waffle",
+      "description": "Layers of milk, dark, and white chocolate cascading over hot waffle.",
+      "price": 99,
+      "badge": "Decadent",
+      "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Triple Cocoa",
+        "Indulgent"
+      ]
+    },
+    {
+      "id": "dc-4",
+      "category": "double",
+      "categoryLabel": "Double Chocolate",
+      "name": "Choco White Waffle",
+      "description": "Rich chocolate base loaded with heavy sweet white chocolate drizzle.",
+      "price": 99,
+      "badge": "Fan Favorite",
+      "image": "https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Choco White",
+        "Crispy"
+      ]
+    },
+    {
+      "id": "cb-1",
+      "category": "crunch",
+      "categoryLabel": "Crunch Bites",
+      "name": "Crunch Bites (Overloaded Chocolates)",
+      "description": "Crispy waffle bites loaded with rich chocolates – a bite you'll never forget!",
+      "price": 99,
+      "badge": "⭐ MUST TRY!",
+      "image": "https://images.unsplash.com/photo-1515037893149-de7f840978e2?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Must Try",
+        "Bite Size",
+        "Overloaded"
+      ]
+    },
+    {
+      "id": "sp-1",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Naked Waffle",
+      "description": "Pure golden caramelized waffle served fresh without chocolate toppings.",
+      "price": 109,
+      "badge": "Simple & Pure",
+      "image": "https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Crispy",
+        "Original"
+      ]
+    },
+    {
+      "id": "sp-2",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Cookie and Cream Waffle",
+      "description": "Crushed chocolate sandwich cookies blended with velvety sweet cream.",
+      "price": 109,
+      "badge": "Kids Love",
+      "image": "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Oreo",
+        "Cream"
+      ]
+    },
+    {
+      "id": "sp-3",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Cotton Candy Waffle",
+      "description": "Fluffy carnival sweet cotton candy glaze with pastel sprinkles.",
+      "price": 109,
+      "badge": "Festive",
+      "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Sweet",
+        "Colorful"
+      ]
+    },
+    {
+      "id": "sp-4",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Bubble Gum Waffle",
+      "description": "Nostalgic sweet bubblegum flavoured syrup with popping candy pearls.",
+      "price": 109,
+      "badge": "Unique",
+      "image": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Bubble Gum",
+        "Novelty"
+      ]
+    },
+    {
+      "id": "sp-5",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Rasmalai Pistachio Waffle",
+      "description": "Royal saffron-infused cardamom milk cream topped with crushed pistachios.",
+      "price": 109,
+      "badge": "Fusion Special",
+      "image": "https://images.unsplash.com/photo-1589218436045-ee320057f443?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Rasmalai",
+        "Desi Twist"
+      ]
+    },
+    {
+      "id": "sp-6",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Butterscotch Waffle",
+      "description": "Golden crunchy praline pieces with buttery caramelized brown sugar drizzle.",
+      "price": 109,
+      "badge": "Crunchy",
+      "image": "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Caramel",
+        "Butterscotch"
+      ]
+    },
+    {
+      "id": "sp-7",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "KitKat Waffle",
+      "description": "Loaded with real KitKat wafer bars, rich chocolate fudge, and crunch.",
+      "price": 129,
+      "badge": "Supreme",
+      "image": "https://images.unsplash.com/photo-1568051243851-f9b136146e97?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "KitKat",
+        "Wafer Crunch"
+      ]
+    },
+    {
+      "id": "sp-8",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Special Nuts Waffle",
+      "description": "Roasted almonds, cashews, and walnuts drenched in Belgian chocolate.",
+      "price": 129,
+      "badge": "Nutty Loaded",
+      "image": "https://images.unsplash.com/photo-1515037893149-de7f840978e2?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Almonds",
+        "Cashews",
+        "Walnuts"
+      ]
+    },
+    {
+      "id": "sp-9",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Red Velvet Waffle",
+      "description": "Deep scarlet red velvet waffle with sweetened cream cheese glaze.",
+      "price": 129,
+      "badge": "Luxury",
+      "image": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Red Velvet",
+        "Cream Cheese"
+      ]
+    },
+    {
+      "id": "sp-10",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Lotus Biscoff Waffle",
+      "description": "Spiced Belgian caramelized Lotus Biscoff spread and biscuit crumble.",
+      "price": 129,
+      "badge": "Trending Bestseller",
+      "image": "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Lotus Biscoff",
+        "Speculoos"
+      ]
+    },
+    {
+      "id": "sp-11",
+      "category": "special",
+      "categoryLabel": "Special Waffles",
+      "name": "Kunafa Pistachio Waffle",
+      "description": "Golden roasted kataifi pastry crunch, pistachio cream, and sweet drizzle.",
+      "price": 129,
+      "badge": "Chef Signature",
+      "image": "https://images.unsplash.com/photo-1589218436045-ee320057f443?auto=format&fit=crop&w=600&q=80",
+      "tags": [
+        "Kunafa",
+        "Pistachio",
+        "Middle Eastern"
+      ]
+    }
+  ],
+  "orders": []
+}
