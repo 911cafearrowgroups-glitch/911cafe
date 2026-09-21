@@ -287,5 +287,94 @@
       ]
     }
   ],
-  "orders": []
+  "orders": [
+    {
+      "id": "911-9357",
+      "customerName": "demo",
+      "customerPhone": "",
+      "customerId": null,
+      "orderType": "dine-in",
+      "deliveryAddress": "",
+      "landmark": "",
+      "items": [
+        {
+          "id": "cw-2",
+          "category": "classic",
+          "categoryLabel": "Classic Waffles",
+          "name": "White Chocolate Waffle",
+          "description": "Fresh hot waffle glazed with creamy, smooth white chocolate.",
+          "price": 89,
+          "badge": "Sweet & Creamy",
+          "image": "https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=600&q=80",
+          "tags": [
+            "White Chocolate",
+            "Sweet"
+          ],
+          "quantity": 1
+        },
+        {
+          "id": "cw-3",
+          "category": "classic",
+          "categoryLabel": "Classic Waffles",
+          "name": "Dark Chocolate Waffle",
+          "description": "Intense, rich dark chocolate spread over golden crispy waffle.",
+          "price": 89,
+          "badge": "Rich Cocoa",
+          "image": "https://images.unsplash.com/photo-1568051243851-f9b136146e97?auto=format&fit=crop&w=600&q=80",
+          "tags": [
+            "Dark Chocolate",
+            "Intense"
+          ],
+          "quantity": 1
+        },
+        {
+          "id": "dc-1",
+          "category": "double",
+          "categoryLabel": "Double Chocolate",
+          "name": "Chocolate Overload Waffle",
+          "description": "Double shot of rich melted chocolate covering every crispy waffle square.",
+          "price": 99,
+          "badge": "Bestseller",
+          "image": "https://images.unsplash.com/photo-1568051243851-f9b136146e97?auto=format&fit=crop&w=600&q=80",
+          "tags": [
+            "Overload",
+            "Double Chocolate"
+          ],
+          "quantity": 1
+        }
+      ],
+      "instructions": "",
+      "subtotal": 277,
+      "parcelCharges": 0,
+      "deliveryFee": 0,
+      "discount": 0,
+      "total": 277,
+      "paymentMethod": "cash",
+      "status": "delivered",
+      "rewardApplied": false,
+      "createdAt": "2026-09-21T09:58:07.781Z",
+      "statusHistory": [
+        {
+          "status": "waiting",
+          "timestamp": "2026-09-21T09:58:07.781Z",
+          "note": "Order placed (DINE-IN)"
+        },
+        {
+          "status": "preparing",
+          "timestamp": "2026-09-21T09:58:22.459Z",
+          "note": "Baking on waffle iron"
+        },
+        {
+          "status": "out_for_delivery",
+          "timestamp": "2026-09-21T09:58:23.338Z",
+          "note": "Dispatched / ready for pickup"
+        },
+        {
+          "status": "delivered",
+          "timestamp": "2026-09-21T09:58:24.662Z",
+          "note": "Completed & Delivered (Paid via CASH)"
+        }
+      ]
+    }
+  ]
 }

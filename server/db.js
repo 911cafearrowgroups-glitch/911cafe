@@ -647,7 +647,7 @@ class Database {
   }
 
   validateStaffPin(pin) {
-    const validPins = ['9110', '1234', '911'];
+    const validPins = ['7200', '9110'];
     const cleanPin = (pin || '').trim();
     if (validPins.includes(cleanPin)) {
       return {
@@ -659,7 +659,7 @@ class Database {
     }
     return {
       success: false,
-      error: 'Invalid PIN. Please enter your 4-digit staff PIN (Default: 9110)'
+      error: 'Invalid PIN. Please enter your 4-digit staff PIN.'
     };
   }
 
