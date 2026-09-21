@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { 
   Clock, ChefHat, Bike, CheckCircle2, AlertTriangle, 
   MapPin, Phone, User, RefreshCw, Sparkles, Filter, 
-  ArrowRight, Search, Volume2, VolumeX, ShieldAlert, Check
+  ArrowRight, Search, Volume2, VolumeX, ShieldAlert, Check, Trash2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getStoredOrders, saveStoredOrders, updateStoredOrderStatus, triggerServerSync } from '../utils/persistentSync';
+import { getStoredOrders, saveStoredOrders, updateStoredOrderStatus, triggerServerSync, clearStoredOrders } from '../utils/persistentSync';
 
 export default function OrderMonitor() {
   const [orders, setOrders] = useState(() => getStoredOrders());
@@ -126,6 +126,27 @@ export default function OrderMonitor() {
     await handleUpdateStatus(orderId, 'delivered', payment);
   };
 
+  const handleClearAllOrders = async () => {
+    if (!window.confirm('🚨 Are you sure you want to delete ALL order data? This will wipe all test order history from the system. This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await fetch('/api/orders', { method: 'DELETE' });
+      clearStoredOrders();
+      setOrders([]);
+      alert('✅ All order data deleted successfully!');
+    } catch (e) {
+      console.error('Failed to clear orders:', e);
+      clearStoredOrders();
+      setOrders([]);
+      alert('Local order data cleared successfully.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Filter orders
   const filteredOrders = orders.filter(o => {
     // Status filter
@@ -205,6 +226,17 @@ export default function OrderMonitor() {
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline text-[11px]">Refresh</span>
+          </button>
+
+          {/* Delete All Orders */}
+          <button
+            type="button"
+            onClick={handleClearAllOrders}
+            className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+            title="Delete all user order data"
+          >
+            <Trash2 className="w-4 h-4 text-red-400" />
+            <span className="hidden sm:inline text-[11px]">Clear All Orders</span>
           </button>
         </div>
       </div>

@@ -635,6 +635,12 @@ class Database {
     });
   }
 
+  clearAllOrders() {
+    this.data.orders = [];
+    this.save();
+    return { success: true, message: 'All order data deleted successfully.' };
+  }
+
   getOrderById(id) {
     const order = this.data.orders.find(o => o.id === id);
     if (!order) return null;

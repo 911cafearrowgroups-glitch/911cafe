@@ -154,6 +154,24 @@ app.get('/api/orders', (req, res) => {
   }
 });
 
+app.delete('/api/orders', (req, res) => {
+  try {
+    const result = db.clearAllOrders();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/orders/clear', (req, res) => {
+  try {
+    const result = db.clearAllOrders();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.get('/api/orders/:id', (req, res) => {
   try {
     const order = db.getOrderById(req.params.id);

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   Search, PlusCircle, Award, CheckCircle, Sparkles, 
   Users, Gift, RotateCcw, AlertTriangle, ArrowRight, 
-  ShoppingBag, Phone, User, Check, RefreshCw, X, ChefHat, Clock, ClipboardList, TrendingUp, LogOut
+  ShoppingBag, Phone, User, Check, RefreshCw, X, ChefHat, Clock, ClipboardList, TrendingUp, LogOut, Trash2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import PunchCard from './PunchCard';
 import OrderMonitor from './OrderMonitor';
 import TakeOrderPage from './TakeOrderPage';
 import DailyBalanceReport from './DailyBalanceReport';
-import { getStoredCustomers, saveStoredCustomers, triggerServerSync } from '../utils/persistentSync';
+import { getStoredCustomers, saveStoredCustomers, triggerServerSync, clearStoredOrders } from '../utils/persistentSync';
 
 export default function StaffDashboard({ onClose, staffUser }) {
   const [activeTab, setActiveTab] = useState('take-order'); // 'take-order' | 'orders' | 'balance' | 'loyalty'
@@ -226,6 +226,23 @@ export default function StaffDashboard({ onClose, staffUser }) {
     }
   };
 
+  const handleClearAllOrders = async () => {
+    if (!window.confirm('🚨 Are you sure you want to delete ALL user order data? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await fetch('/api/orders', { method: 'DELETE' });
+      clearStoredOrders();
+      fetchStats();
+      setActionMsg({ type: 'success', text: 'All test order data deleted successfully!' });
+      alert('✅ All order data deleted successfully!');
+    } catch (err) {
+      clearStoredOrders();
+      alert('Local order data cleared.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0d0908] text-white py-8 px-4 sm:px-6 lg:px-8">
       {/* Top Header */}
@@ -263,6 +280,15 @@ export default function StaffDashboard({ onClose, staffUser }) {
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-md cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" /> Enroll New Customer
+          </button>
+
+          <button
+            onClick={handleClearAllOrders}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-bold transition-colors cursor-pointer"
+            title="Delete all test order history for production"
+          >
+            <Trash2 className="w-4 h-4 text-red-400" />
+            <span>Clear All Orders</span>
           </button>
 
           {onClose && (

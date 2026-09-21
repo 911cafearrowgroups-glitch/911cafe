@@ -21,6 +21,14 @@ export function saveStoredOrders(orders) {
   }
 }
 
+export function clearStoredOrders() {
+  try {
+    localStorage.removeItem(ORDERS_KEY);
+  } catch (e) {
+    console.warn('Failed to clear orders from localStorage:', e);
+  }
+}
+
 export function getStoredCustomers() {
   try {
     const raw = localStorage.getItem(CUSTOMERS_KEY);
