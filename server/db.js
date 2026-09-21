@@ -286,15 +286,29 @@ class Database {
       stamps: [],
       redemptions: [],
       menu: OFFICIAL_MENU,
-      orders: []
+      orders: [],
+      clearedAt: Date.now()
     };
     this.save();
   }
 
-  syncFromClient({ orders = [], customers = [], stamps = [], redemptions = [] }) {
+  syncFromClient({ orders = [], customers = [], stamps = [], redemptions = [], clientClearedAt = 0 }) {
+    const clearedAt = this.data.clearedAt || 0;
+    if (clientClearedAt && clientClearedAt > clearedAt) {
+      this.data.clearedAt = clientClearedAt;
+      this.data.orders = [];
+      this.save();
+    }
+
+    const effectiveClearedAt = this.data.clearedAt || 0;
+
     if (Array.isArray(orders) && orders.length > 0) {
       orders.forEach(o => {
         if (!o || !o.id) return;
+        const orderTime = o.createdAt ? new Date(o.createdAt).getTime() : 0;
+        if (effectiveClearedAt && orderTime > 0 && orderTime < effectiveClearedAt) {
+          return;
+        }
         const existing = this.data.orders.find(item => item.id === o.id);
         if (!existing) {
           this.data.orders.push(o);
@@ -339,6 +353,8 @@ class Database {
 
     this.save();
     return {
+      success: true,
+      clearedAt: this.data.clearedAt,
       ordersCount: this.data.orders.length,
       customersCount: this.data.customers.length
     };
@@ -637,8 +653,9 @@ class Database {
 
   clearAllOrders() {
     this.data.orders = [];
+    this.data.clearedAt = Date.now();
     this.save();
-    return { success: true, message: 'All order data deleted successfully.' };
+    return { success: true, clearedAt: this.data.clearedAt, message: 'All order data deleted successfully.' };
   }
 
   getOrderById(id) {

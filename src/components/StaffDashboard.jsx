@@ -232,13 +232,15 @@ export default function StaffDashboard({ onClose, staffUser }) {
     }
 
     try {
-      await fetch('/api/orders', { method: 'DELETE' });
-      clearStoredOrders();
+      const res = await fetch('/api/orders', { method: 'DELETE' });
+      const data = await res.json();
+      const ts = data?.clearedAt || Date.now();
+      clearStoredOrders(ts);
       fetchStats();
       setActionMsg({ type: 'success', text: 'All test order data deleted successfully!' });
       alert('✅ All order data deleted successfully!');
     } catch (err) {
-      clearStoredOrders();
+      clearStoredOrders(Date.now());
       alert('Local order data cleared.');
     }
   };

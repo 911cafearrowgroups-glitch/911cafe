@@ -5,7 +5,10 @@ import {
   ArrowRight, Search, Volume2, VolumeX, ShieldAlert, Check, Trash2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getStoredOrders, saveStoredOrders, updateStoredOrderStatus, triggerServerSync, clearStoredOrders } from '../utils/persistentSync';
+import { 
+  getStoredOrders, saveStoredOrders, updateStoredOrderStatus, 
+  triggerServerSync, clearStoredOrders, getStoredClearedAt 
+} from '../utils/persistentSync';
 
 export default function OrderMonitor() {
   const [orders, setOrders] = useState(() => getStoredOrders());
@@ -24,12 +27,27 @@ export default function OrderMonitor() {
       const data = await res.json();
       if (res.ok) {
         const serverOrders = data.data || [];
-        const localOrders = getStoredOrders();
+        const serverClearedAt = Number(data.clearedAt) || 0;
+        const localClearedAt = getStoredClearedAt();
 
-        if (localOrders.length > serverOrders.length) {
+        if (serverClearedAt > localClearedAt) {
+          clearStoredOrders(serverClearedAt);
+          setOrders([]);
+          return;
+        }
+
+        const validLocalOrders = getStoredOrders().filter(o => {
+          const ot = o.createdAt ? new Date(o.createdAt).getTime() : 0;
+          return !serverClearedAt || ot >= serverClearedAt;
+        });
+
+        if (serverOrders.length === 0 && validLocalOrders.length === 0) {
+          setOrders([]);
+          saveStoredOrders([]);
+        } else if (validLocalOrders.length > serverOrders.length) {
           triggerServerSync();
           const serverIds = new Set(serverOrders.map(o => o.id));
-          const missing = localOrders.filter(o => !serverIds.has(o.id));
+          const missing = validLocalOrders.filter(o => !serverIds.has(o.id));
           const merged = [...serverOrders, ...missing];
           setOrders(merged);
           saveStoredOrders(merged);
@@ -38,8 +56,7 @@ export default function OrderMonitor() {
           saveStoredOrders(serverOrders);
         }
         
-        const currentWaiting = (orders || []).filter(o => o.status === 'waiting').length;
-        // If a new waiting order arrived and sound enabled, notify
+        const currentWaiting = (serverOrders || []).filter(o => o.status === 'waiting').length;
         if (soundEnabled && currentWaiting > lastWaitingCount && lastWaitingCount !== 0) {
           playAlertSound();
         }
@@ -77,7 +94,14 @@ export default function OrderMonitor() {
   useEffect(() => {
     fetchOrders();
     const interval = setInterval(fetchOrders, 4000); // Poll every 4 seconds
-    return () => clearInterval(interval);
+    const handleOrdersCleared = () => {
+      setOrders([]);
+    };
+    window.addEventListener('911_orders_cleared', handleOrdersCleared);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('911_orders_cleared', handleOrdersCleared);
+    };
   }, [soundEnabled, lastWaitingCount]);
 
   const handleUpdateStatus = async (orderId, newStatus, paymentMethod = null) => {
@@ -133,13 +157,15 @@ export default function OrderMonitor() {
 
     try {
       setLoading(true);
-      await fetch('/api/orders', { method: 'DELETE' });
-      clearStoredOrders();
+      const res = await fetch('/api/orders', { method: 'DELETE' });
+      const data = await res.json();
+      const ts = data?.clearedAt || Date.now();
+      clearStoredOrders(ts);
       setOrders([]);
       alert('✅ All order data deleted successfully!');
     } catch (e) {
       console.error('Failed to clear orders:', e);
-      clearStoredOrders();
+      clearStoredOrders(Date.now());
       setOrders([]);
       alert('Local order data cleared successfully.');
     } finally {

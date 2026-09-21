@@ -40,19 +40,10 @@ export default function DailyBalanceReport() {
   };
 
   const fetchDailyBalance = async (date) => {
-    setLoading(true);
     try {
       const res = await fetch(`/api/reports/daily?date=${date}`);
       const data = await res.json();
       if (res.ok && data?.data) {
-        if (data.data.completedOrdersCount === 0) {
-          const localStored = getStoredOrders();
-          const localReport = calculateFromOrders(localStored, date);
-          if (localReport.completedOrdersCount > 0) {
-            setBalanceData(localReport);
-            return;
-          }
-        }
         setBalanceData(data.data);
       } else {
         const localStored = getStoredOrders();
@@ -68,7 +59,25 @@ export default function DailyBalanceReport() {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchDailyBalance(selectedDate);
+
+    // Auto-poll every 4 seconds so mobile and desktop sync in real-time
+    const timer = setInterval(() => {
+      fetchDailyBalance(selectedDate);
+    }, 4000);
+
+    const handleOrdersCleared = () => {
+      setBalanceData(calculateFromOrders([], selectedDate));
+      fetchDailyBalance(selectedDate);
+    };
+
+    window.addEventListener('911_orders_cleared', handleOrdersCleared);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('911_orders_cleared', handleOrdersCleared);
+    };
   }, [selectedDate]);
 
   const handlePrint = () => {
