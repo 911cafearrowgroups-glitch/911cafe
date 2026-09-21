@@ -3,6 +3,7 @@ import {
   Calendar, DollarSign, Smartphone, Banknote, 
   Printer, RefreshCw, ShoppingBag, Package, TrendingUp, CheckCircle, Clock
 } from 'lucide-react';
+import { getStoredOrders } from '../utils/persistentSync';
 
 export default function DailyBalanceReport() {
   const todayStr = new Date().toISOString().slice(0, 10);
@@ -10,16 +11,57 @@ export default function DailyBalanceReport() {
   const [balanceData, setBalanceData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const calculateFromOrders = (orders, date) => {
+    const matching = orders.filter(o => {
+      const orderDate = (o.createdAt || o.date || '').slice(0, 10);
+      return orderDate === date && (o.status === 'delivered' || o.paymentStatus === 'paid');
+    });
+
+    const totalSales = matching.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
+    const cashSales = matching.filter(o => o.paymentMethod === 'cash').reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
+    const upiSales = matching.filter(o => o.paymentMethod === 'upi').reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
+    const cardSales = matching.filter(o => o.paymentMethod === 'card').reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
+    const parcelFeeCollected = matching.reduce((sum, o) => sum + (Number(o.parcelCharge) || 0), 0);
+    const parcelOrdersCount = matching.filter(o => o.orderType === 'takeaway' || o.orderType === 'parcel' || o.orderType === 'delivery').length;
+    const dineInOrdersCount = matching.filter(o => o.orderType === 'dine-in').length;
+
+    return {
+      date,
+      completedOrdersCount: matching.length,
+      dineInOrdersCount,
+      parcelOrdersCount,
+      totalSales,
+      cashSales,
+      upiSales,
+      cardSales,
+      parcelFeeCollected,
+      recentSettlements: matching.slice(0, 10)
+    };
+  };
+
   const fetchDailyBalance = async (date) => {
     setLoading(true);
     try {
       const res = await fetch(`/api/reports/daily?date=${date}`);
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data?.data) {
+        if (data.data.completedOrdersCount === 0) {
+          const localStored = getStoredOrders();
+          const localReport = calculateFromOrders(localStored, date);
+          if (localReport.completedOrdersCount > 0) {
+            setBalanceData(localReport);
+            return;
+          }
+        }
         setBalanceData(data.data);
+      } else {
+        const localStored = getStoredOrders();
+        setBalanceData(calculateFromOrders(localStored, date));
       }
     } catch (err) {
       console.error('Failed to load daily balance:', err);
+      const localStored = getStoredOrders();
+      setBalanceData(calculateFromOrders(localStored, date));
     } finally {
       setLoading(false);
     }

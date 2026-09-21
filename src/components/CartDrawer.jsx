@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, MapPin, Phone, User, Sparkles, Check, ArrowRight, AlertCircle, Clock } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { saveSingleStoredOrder } from '../utils/persistentSync';
 
 export default function CartDrawer({
   isOpen,
@@ -116,6 +117,7 @@ export default function CartDrawer({
         origin: { y: 0.6 }
       });
 
+      saveSingleStoredOrder(data.order);
       onClearCart();
       onClose();
       if (onOrderPlaced) {

@@ -65,7 +65,7 @@ export default function InstallAppBanner() {
       {/* Discreet Sticky App Install Bar */}
       <aside 
         aria-label="App Installation Prompt" 
-        className="fixed top-20 left-3 right-3 sm:left-auto sm:right-5 sm:max-w-md z-40 bg-gradient-to-r from-[#1f140e] via-[#2a1b13] to-[#1a100a] border border-amber-500/40 rounded-2xl p-3 shadow-2xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-top-4 duration-300"
+        className="fixed top-20 left-3 right-3 sm:left-auto sm:right-5 sm:max-w-md z-40 max-w-[calc(100vw-24px)] box-border bg-gradient-to-r from-[#1f140e] via-[#2a1b13] to-[#1a100a] border border-amber-500/40 rounded-2xl p-3 shadow-2xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-top-4 duration-300"
       >
         <div className="flex items-center gap-3">
           <img 

@@ -291,6 +291,59 @@ class Database {
     this.save();
   }
 
+  syncFromClient({ orders = [], customers = [], stamps = [], redemptions = [] }) {
+    if (Array.isArray(orders) && orders.length > 0) {
+      orders.forEach(o => {
+        if (!o || !o.id) return;
+        const existing = this.data.orders.find(item => item.id === o.id);
+        if (!existing) {
+          this.data.orders.push(o);
+        } else {
+          existing.status = o.status || existing.status;
+          existing.paymentMethod = o.paymentMethod || existing.paymentMethod;
+          if (Array.isArray(o.statusHistory) && o.statusHistory.length > (existing.statusHistory?.length || 0)) {
+            existing.statusHistory = o.statusHistory;
+          }
+        }
+      });
+    }
+
+    if (Array.isArray(customers) && customers.length > 0) {
+      customers.forEach(c => {
+        if (!c || !c.id) return;
+        const existing = this.data.customers.find(item => item.id === c.id || (item.phone && c.phone && item.phone === c.phone));
+        if (!existing) {
+          this.data.customers.push(c);
+        } else {
+          existing.stampsCount = Math.max(existing.stampsCount || 0, c.stampsCount || 0);
+          existing.rewardAvailable = existing.rewardAvailable || c.rewardAvailable;
+        }
+      });
+    }
+
+    if (Array.isArray(stamps) && stamps.length > 0) {
+      stamps.forEach(s => {
+        if (s && s.id && !this.data.stamps.find(item => item.id === s.id)) {
+          this.data.stamps.push(s);
+        }
+      });
+    }
+
+    if (Array.isArray(redemptions) && redemptions.length > 0) {
+      redemptions.forEach(r => {
+        if (r && r.id && !this.data.redemptions.find(item => item.id === r.id)) {
+          this.data.redemptions.push(r);
+        }
+      });
+    }
+
+    this.save();
+    return {
+      ordersCount: this.data.orders.length,
+      customersCount: this.data.customers.length
+    };
+  }
+
   save() {
     try {
       const tempFile = `${DB_FILE}.tmp`;

@@ -5,11 +5,12 @@ import {
   ArrowRight, Search, Volume2, VolumeX, ShieldAlert, Check
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { getStoredOrders, saveStoredOrders, updateStoredOrderStatus, triggerServerSync } from '../utils/persistentSync';
 
 export default function OrderMonitor() {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState(() => getStoredOrders());
   const [filter, setFilter] = useState('active'); // 'active' | 'waiting' | 'preparing' | 'out_for_delivery' | 'delivered' | 'all'
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [actionLoading, setActionLoading] = useState({});
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -22,17 +23,33 @@ export default function OrderMonitor() {
       const res = await fetch('/api/orders');
       const data = await res.json();
       if (res.ok) {
-        setOrders(data.data || []);
+        const serverOrders = data.data || [];
+        const localOrders = getStoredOrders();
+
+        if (localOrders.length > serverOrders.length) {
+          triggerServerSync();
+          const serverIds = new Set(serverOrders.map(o => o.id));
+          const missing = localOrders.filter(o => !serverIds.has(o.id));
+          const merged = [...serverOrders, ...missing];
+          setOrders(merged);
+          saveStoredOrders(merged);
+        } else {
+          setOrders(serverOrders);
+          saveStoredOrders(serverOrders);
+        }
         
-        const currentWaiting = (data.data || []).filter(o => o.status === 'waiting').length;
+        const currentWaiting = (orders || []).filter(o => o.status === 'waiting').length;
         // If a new waiting order arrived and sound enabled, notify
         if (soundEnabled && currentWaiting > lastWaitingCount && lastWaitingCount !== 0) {
           playAlertSound();
         }
         setLastWaitingCount(currentWaiting);
+      } else {
+        setOrders(getStoredOrders());
       }
     } catch (e) {
       console.error('Failed to fetch orders:', e);
+      setOrders(getStoredOrders());
     } finally {
       setLoading(false);
     }
@@ -65,6 +82,10 @@ export default function OrderMonitor() {
 
   const handleUpdateStatus = async (orderId, newStatus, paymentMethod = null) => {
     setActionLoading(prev => ({ ...prev, [orderId]: true }));
+    // Immediately persist locally
+    updateStoredOrderStatus(orderId, newStatus, paymentMethod);
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus, paymentMethod: paymentMethod || o.paymentMethod || 'cash' } : o));
+
     try {
       const res = await fetch(`/api/orders/${orderId}/status`, {
         method: 'PATCH',
@@ -84,11 +105,9 @@ export default function OrderMonitor() {
           });
         }
         await fetchOrders();
-      } else {
-        alert(data.error || 'Failed to update order');
       }
     } catch (err) {
-      alert(err.message);
+      console.warn('Network sync status warning:', err);
     } finally {
       setActionLoading(prev => ({ ...prev, [orderId]: false }));
     }

@@ -9,11 +9,12 @@ import PunchCard from './PunchCard';
 import OrderMonitor from './OrderMonitor';
 import TakeOrderPage from './TakeOrderPage';
 import DailyBalanceReport from './DailyBalanceReport';
+import { getStoredCustomers, saveStoredCustomers, triggerServerSync } from '../utils/persistentSync';
 
 export default function StaffDashboard({ onClose, staffUser }) {
   const [activeTab, setActiveTab] = useState('take-order'); // 'take-order' | 'orders' | 'balance' | 'loyalty'
   const [stats, setStats] = useState(null);
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState(() => getStoredCustomers());
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -49,8 +50,19 @@ export default function StaffDashboard({ onClose, staffUser }) {
     try {
       const res = await fetch(`/api/customers?query=${encodeURIComponent(q)}`);
       const data = await res.json();
-      if (res.ok) {
-        setCustomers(data.data);
+      if (res.ok && data.data) {
+        if (data.data.length > 0) {
+          setCustomers(data.data);
+          saveStoredCustomers(data.data);
+        } else {
+          const localCusts = getStoredCustomers();
+          if (localCusts.length > 0 && !q) {
+            setCustomers(localCusts);
+            triggerServerSync();
+          } else {
+            setCustomers(data.data);
+          }
+        }
         // If one exact customer was selected, update their details
         if (selectedCustomer) {
           const updated = data.data.find(c => c.id === selectedCustomer.id);
@@ -62,6 +74,10 @@ export default function StaffDashboard({ onClose, staffUser }) {
       }
     } catch (e) {
       console.error(e);
+      const localCusts = getStoredCustomers();
+      if (localCusts.length > 0) {
+        setCustomers(localCusts);
+      }
     } finally {
       setLoading(false);
     }
@@ -120,6 +136,13 @@ export default function StaffDashboard({ onClose, staffUser }) {
         });
       }
 
+      if (data.customer) {
+        const current = getStoredCustomers();
+        const updated = current.map(c => c.id === data.customer.id ? data.customer : c);
+        saveStoredCustomers(updated);
+        triggerServerSync();
+      }
+
       setOrderNote('');
       fetchCustomerDetails(selectedCustomer.id);
       fetchStats();
@@ -159,6 +182,13 @@ export default function StaffDashboard({ onClose, staffUser }) {
         text: data.message
       });
 
+      if (data.customer) {
+        const current = getStoredCustomers();
+        const updated = current.map(c => c.id === data.customer.id ? data.customer : c);
+        saveStoredCustomers(updated);
+        triggerServerSync();
+      }
+
       setShowRedeemModal(false);
       fetchCustomerDetails(selectedCustomer.id);
       fetchStats();
@@ -182,6 +212,12 @@ export default function StaffDashboard({ onClose, staffUser }) {
       setShowNewModal(false);
       setNewCustomerData({ name: '', phone: '', email: '', favoriteItem: 'Nutella Lava Crunch Waffle' });
       setSelectedCustomer(data.data);
+      if (data.data) {
+        const current = getStoredCustomers();
+        const updated = [data.data, ...current.filter(c => c.id !== data.data.id)];
+        saveStoredCustomers(updated);
+        triggerServerSync();
+      }
       fetchCustomers();
       fetchStats();
       setActionMsg({ type: 'success', text: `Customer ${data.data.name} enrolled successfully!` });

@@ -133,6 +133,17 @@ app.post('/api/orders', (req, res) => {
   }
 });
 
+// Client-to-Server Persistent Rehydration Sync (For Vercel serverless persistence)
+app.post('/api/sync', (req, res) => {
+  try {
+    const { orders = [], customers = [], stamps = [], redemptions = [] } = req.body;
+    const result = db.syncFromClient({ orders, customers, stamps, redemptions });
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.get('/api/orders', (req, res) => {
   try {
     const { filter } = req.query; // 'waiting', 'preparing', 'out_for_delivery', 'delivered', 'active', 'all'

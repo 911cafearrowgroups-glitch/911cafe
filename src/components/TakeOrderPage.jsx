@@ -5,6 +5,7 @@ import {
   AlertCircle, ChefHat, CheckCircle2, DollarSign
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { saveSingleStoredOrder } from '../utils/persistentSync';
 
 export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
   const [menuItems, setMenuItems] = useState([]);
@@ -156,6 +157,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
       });
 
       setLastPunchedOrder(data.order);
+      saveSingleStoredOrder(data.order);
       handleClearTicket();
       if (onOrderPunched) onOrderPunched(data.order);
     } catch (err) {
