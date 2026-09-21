@@ -666,35 +666,7 @@ class Database {
     return {
       success: false,
       error: 'Invalid PIN. Please enter your 4-digit staff PIN.'
-    };
-  }
-
-  updateOrderStatus(id, newStatus, staffNote = '', paymentMethod = null) {
-    const order = this.data.orders.find(o => o.id === id);
-    if (!order) throw new Error(`Order ${id} not found.`);
-
-    order.status = newStatus;
-    if (paymentMethod && ['cash', 'upi'].includes(paymentMethod.toLowerCase())) {
-      order.paymentMethod = paymentMethod.toLowerCase();
-    }
-
-    const nowIso = new Date().toISOString();
-
-    let note = staffNote;
-    if (!note) {
-      if (newStatus === 'preparing') note = 'Baking on waffle iron';
-      else if (newStatus === 'out_for_delivery') note = 'Dispatched / ready for pickup';
-      else if (newStatus === 'delivered') note = `Completed & Delivered (Paid via ${order.paymentMethod ? order.paymentMethod.toUpperCase() : 'CASH'})`;
-    }
-
-    order.statusHistory.push({ status: newStatus, timestamp: nowIso, note });
-    this.save();
-
-    return {
-      order,
-      newStatus,
-      paymentMethod: order.paymentMethod,
-      message: `Order #${order.id} status updated to ${newStatus.replace(/_/g, ' ').toUpperCase()}`
+ `Order #${order.id} status updated to ${newStatus.replace(/_/g, ' ').toUpperCase()}`
     };
   }
 
