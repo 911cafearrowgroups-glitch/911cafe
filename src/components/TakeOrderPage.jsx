@@ -169,11 +169,13 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
 
   // Filter menu
   const categories = [
-    { id: 'all', label: 'All Items (20)' },
+    { id: 'all', label: 'All Items (30)' },
     { id: 'classic', label: 'Classic (₹89)' },
     { id: 'double', label: 'Double Choc (₹99)' },
     { id: 'crunch', label: 'Crunch Bites (₹99)' },
-    { id: 'special', label: 'Special Waffles (₹109 - ₹129)' },
+    { id: 'special', label: 'Special Waffles' },
+    { id: 'pancake', label: '🥞 Pan Cakes' },
+    { id: 'brownie', label: '🍫 Brownies' },
   ];
 
   const filteredItems = menuItems.filter(item => {
@@ -240,7 +242,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
               <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="Search waffle..."
+                placeholder="Search menu item..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/40 border border-amber-500/25 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-400"

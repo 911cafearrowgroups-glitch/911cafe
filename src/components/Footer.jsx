@@ -30,12 +30,12 @@ export default function Footer({ onOpenStaffLogin }) {
               Signature Treats
             </h4>
             <ul className="space-y-2 text-zinc-400">
-              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Belgian Classic Waffles</a></li>
-              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Nutella Lava Crunch Waffles</a></li>
-              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Triple Stack Golden Fluff Pancakes</a></li>
-              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Wild Blueberry Burst Pancakes</a></li>
-              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Sizzling Fudgy Brownie & Ice Cream</a></li>
-              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Salted Caramel Sea-Salt Brownies</a></li>
+              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Belgian Chocolate Waffles (₹89)</a></li>
+              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Chocolate Overload Waffle (₹99)</a></li>
+              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Kunafa Pistachio Waffle (₹129)</a></li>
+              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Triple Chocolate Pan Cakes (₹79)</a></li>
+              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Brownie Loaded (₹89)</a></li>
+              <li><a href="#menu" className="hover:text-amber-400 transition-colors">Brownie with Ice Cream (₹99)</a></li>
             </ul>
           </div>
 

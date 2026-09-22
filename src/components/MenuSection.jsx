@@ -26,11 +26,13 @@ export default function MenuSection({ onSelectForLoyalty, onAddToCart, cartItems
   };
 
   const categories = [
-    { id: 'all', label: 'All Waffles' },
+    { id: 'all', label: 'All Items (30)' },
     { id: 'classic', label: '🧇 Classic Waffles (₹89)' },
     { id: 'double', label: '🍫 Double Chocolate (₹99)' },
     { id: 'crunch', label: '⭐ Crunch Bites (₹99)' },
     { id: 'special', label: '👑 Special Waffles (₹109 - ₹129)' },
+    { id: 'pancake', label: '🥞 Pan Cakes (₹59 - ₹79)' },
+    { id: 'brownie', label: '🍫 Brownies (₹49 - ₹99)' },
   ];
 
   const filteredItems = activeCategory === 'all' 
@@ -53,10 +55,10 @@ export default function MenuSection({ onSelectForLoyalty, onAddToCart, cartItems
           <Flame className="w-3.5 h-3.5" /> Arrow Groups • 911 Cafe
         </div>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black text-white tracking-tight">
-          Official <span className="gold-gradient-text">Waffle Menu</span>
+          Official <span className="gold-gradient-text">Cafe Menu</span>
         </h2>
         <p className="text-zinc-400 mt-2 text-sm sm:text-base leading-relaxed">
-          Waffles that make every moment special! Handcrafted fresh to order.
+          Waffles, Pan Cakes & Brownies that make every moment special! Handcrafted fresh to order.
         </p>
 
         {/* Official Parcel Notice */}

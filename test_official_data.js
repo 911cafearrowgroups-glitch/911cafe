@@ -11,20 +11,25 @@ try {
   const doubleChoc = menu.filter(m => m.category === 'double');
   const crunch = menu.filter(m => m.category === 'crunch');
   const special = menu.filter(m => m.category === 'special');
+  const pancakes = menu.filter(m => m.category === 'pancake');
+  const brownies = menu.filter(m => m.category === 'brownie');
 
   console.log(`   - Classic Waffles (₹89): ${classic.map(c => c.name).join(', ')}`);
   console.log(`   - Double Chocolate (₹99): ${doubleChoc.map(c => c.name).join(', ')}`);
   console.log(`   - Crunch Bites (₹99): ${crunch.map(c => c.name).join(', ')}`);
   console.log(`   - Special Waffles (₹109 - ₹129): ${special.map(c => c.name).join(', ')}`);
+  console.log(`   - Pan Cakes (₹59 - ₹79): ${pancakes.map(c => c.name).join(', ')}`);
+  console.log(`   - Brownies (₹49 - ₹99): ${brownies.map(c => c.name).join(', ')}`);
 
-  if (menu.length !== 20) {
-    throw new Error(`Expected 20 official items, got ${menu.length}`);
+  if (menu.length !== 30) {
+    throw new Error(`Expected 30 official items, got ${menu.length}`);
   }
 
   // 2. Verify Zero Demo Data
   console.log(`✅ Clean Database Check: Customers: ${db.data.customers.length}, Orders: ${db.data.orders.length}`);
 
   // 3. Test Counter Take Order with Parcel Charge
+  db.data.customers = db.data.customers.filter(c => c.phone !== '9876500001');
   const orderRes = db.createOrder({
     customerName: 'Real Customer One',
     customerPhone: '9876500001',
@@ -39,14 +44,14 @@ try {
   const order = orderRes.order;
   console.log(`✅ Counter Order Punched: #${order.id}`);
   console.log(`   Items Subtotal: ₹${order.subtotal} (89*2 + 99 = ₹277)`);
-  console.log(`   Parcel Charge: ₹${order.parcelCharges}`);
-  console.log(`   Grand Total: ₹${order.total} (277 + 10 = ₹287)`);
+  console.log(`   Parcel Charge: ₹${order.parcelCharges} (3 items * ₹10 = ₹30)`);
+  console.log(`   Grand Total: ₹${order.total} (277 + 30 = ₹307)`);
 
-  if (order.parcelCharges !== 10) {
-    throw new Error('Expected ₹10 parcel charge!');
+  if (order.parcelCharges !== 30) {
+    throw new Error('Expected ₹30 parcel charge!');
   }
-  if (order.total !== 287) {
-    throw new Error(`Expected total ₹287, got ₹${order.total}`);
+  if (order.total !== 307) {
+    throw new Error(`Expected total ₹307, got ₹${order.total}`);
   }
 
   // 4. Verify Customer was auto-enrolled with Stamp #1

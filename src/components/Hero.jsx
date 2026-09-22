@@ -23,7 +23,7 @@ export default function Hero() {
 
           {/* Subtext */}
           <p className="mt-4 text-base sm:text-lg text-zinc-300 leading-relaxed max-w-2xl mx-auto font-light">
-            Welcome to <strong className="text-white font-semibold">911 Cafe (Arrow Groups)</strong>. Freshly made on order with premium ingredients and pure love. Classic, Double Chocolate, and Special Waffles starting at just <span className="text-amber-400 font-bold">₹89</span>!
+            Welcome to <strong className="text-white font-semibold">911 Cafe (Arrow Groups)</strong>. Freshly made on order with premium ingredients and pure love. Handcrafted Waffles, Pan Cakes & Brownies starting at just <span className="text-amber-400 font-bold">₹49</span>!
           </p>
 
           {/* Hero Loyalty Hook */}

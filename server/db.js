@@ -245,6 +245,120 @@ const OFFICIAL_MENU = [
     badge: 'Chef Signature',
     image: 'https://images.unsplash.com/photo-1589218436045-ee320057f443?auto=format&fit=crop&w=600&q=80',
     tags: ['Kunafa', 'Pistachio', 'Middle Eastern']
+  },
+
+  // 6. PAN CAKES (₹59 - ₹79)
+  {
+    id: 'pc-1',
+    category: 'pancake',
+    categoryLabel: 'Pan Cakes',
+    name: 'Milk Chocolate Pancake',
+    description: 'Fluffy warm pancake stack drizzled with creamy milk chocolate.',
+    price: 59,
+    badge: 'Popular',
+    image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=600&q=80',
+    tags: ['Pancake', 'Milk Chocolate']
+  },
+  {
+    id: 'pc-2',
+    category: 'pancake',
+    categoryLabel: 'Pan Cakes',
+    name: 'White Chocolate Pancake',
+    description: 'Golden pancake stack drenched in rich, velvety white chocolate glaze.',
+    price: 59,
+    badge: 'Sweet & Creamy',
+    image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=600&q=80',
+    tags: ['Pancake', 'White Chocolate']
+  },
+  {
+    id: 'pc-3',
+    category: 'pancake',
+    categoryLabel: 'Pan Cakes',
+    name: 'Dark Chocolate Pancake',
+    description: 'Decadent pancake stack coated with bold, intense dark chocolate sauce.',
+    price: 59,
+    badge: 'Rich Cocoa',
+    image: 'https://images.unsplash.com/photo-1575853121743-60c24f0a7502?auto=format&fit=crop&w=600&q=80',
+    tags: ['Pancake', 'Dark Chocolate']
+  },
+  {
+    id: 'pc-4',
+    category: 'pancake',
+    categoryLabel: 'Pan Cakes',
+    name: 'Triple Chocolate Pancake',
+    description: 'Ultimate stack layered with milk, dark, and white chocolates with chocolate curls.',
+    price: 79,
+    badge: 'Chocolate Bliss',
+    image: 'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=600&q=80',
+    tags: ['Pancake', 'Triple Chocolate']
+  },
+
+  // 7. BROWNIES (₹49 - ₹99)
+  {
+    id: 'br-1',
+    category: 'brownie',
+    categoryLabel: 'Brownies',
+    name: 'Classic Brownie',
+    description: 'Rich, fudgy & perfectly baked.',
+    price: 49,
+    badge: 'Classic',
+    image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80',
+    tags: ['Brownie', 'Classic', 'Fudgy']
+  },
+  {
+    id: 'br-2',
+    category: 'brownie',
+    categoryLabel: 'Brownies',
+    name: 'Double Chocolate Brownie',
+    description: 'Double the chocolate, double the happiness.',
+    price: 59,
+    badge: 'Double Choc',
+    image: 'https://images.unsplash.com/photo-1589218436045-ee320057f443?auto=format&fit=crop&w=600&q=80',
+    tags: ['Brownie', 'Double Chocolate']
+  },
+  {
+    id: 'br-3',
+    category: 'brownie',
+    categoryLabel: 'Brownies',
+    name: 'Triple Chocolate Brownie',
+    description: 'Three layers of indulgent chocolate bliss.',
+    price: 69,
+    badge: 'Indulgent',
+    image: 'https://images.unsplash.com/photo-1515037893149-de7f840978e2?auto=format&fit=crop&w=600&q=80',
+    tags: ['Brownie', 'Triple Chocolate']
+  },
+  {
+    id: 'br-4',
+    category: 'brownie',
+    categoryLabel: 'Brownies',
+    name: 'Nuts Triple Chocolate Brownie',
+    description: 'Loaded with nuts & triple chocolate goodness.',
+    price: 79,
+    badge: 'Nutty Loaded',
+    image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?auto=format&fit=crop&w=600&q=80',
+    tags: ['Brownie', 'Nuts', 'Triple Chocolate']
+  },
+  {
+    id: 'br-5',
+    category: 'brownie',
+    categoryLabel: 'Brownies',
+    name: 'Brownie Loaded',
+    description: 'Overloaded with chocolate, nuts & pure indulgence.',
+    price: 89,
+    badge: 'Must Try!',
+    image: 'https://images.unsplash.com/photo-1568051243851-f9b136146e97?auto=format&fit=crop&w=600&q=80',
+    tags: ['Brownie', 'Must Try', 'Loaded', 'Nuts']
+  },
+  {
+    id: 'br-6',
+    category: 'brownie',
+    categoryLabel: 'Brownies',
+    name: 'Brownie with Ice Cream',
+    description: 'Warm brownie served with creamy ice cream & chocolate drizzle.',
+    price: 99,
+    badge: 'Chef Special',
+    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80',
+    tags: ['Brownie', 'Ice Cream', 'Warm & Cold']
   }
 ];
 
