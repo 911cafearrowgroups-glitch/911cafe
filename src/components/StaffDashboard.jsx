@@ -324,31 +324,31 @@ export default function StaffDashboard({ onClose, staffUser }) {
 
       <div className="max-w-7xl mx-auto mt-6">
         {/* Navigation Tabs for Staff */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-amber-500/20 pb-4">
+        <div className="flex overflow-x-auto gap-2 mb-4 sm:mb-6 border-b border-amber-500/20 pb-3 scrollbar-none whitespace-nowrap">
           <button
             type="button"
             onClick={() => handleTabSelect('take-order')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'take-order'
-                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
+                ? 'bg-amber-500 text-black shadow-lg font-black'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <ClipboardList className="w-4 h-4" />
-            <span>📝 Take Order (Counter POS)</span>
+            <span>📝 Take Order (POS)</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleTabSelect('orders')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'orders'
-                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
+                ? 'bg-amber-500 text-black shadow-lg font-black'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>🛎️ Kitchen Waiting Monitor</span>
+            <span>🛎️ Kitchen Monitor</span>
             {stats?.waitingOrders > 0 && (
               <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-mono font-black animate-pulse">
                 {stats.waitingOrders} Waiting
@@ -359,27 +359,27 @@ export default function StaffDashboard({ onClose, staffUser }) {
           <button
             type="button"
             onClick={() => handleTabSelect('balance')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'balance'
-                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
+                ? 'bg-amber-500 text-black shadow-lg font-black'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <TrendingUp className="w-4 h-4" />
-            <span>📊 Daily Balance (Cash vs UPI)</span>
+            <span>📊 Daily Balance</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleTabSelect('loyalty')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'loyalty'
-                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
+                ? 'bg-amber-500 text-black shadow-lg font-black'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>💳 Customer Loyalty & Punch Card POS</span>
+            <span>💳 Loyalty Cards</span>
           </button>
         </div>
 

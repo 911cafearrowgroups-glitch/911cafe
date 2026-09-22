@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Plus, Minus, Trash2, Phone, User, ShoppingBag, 
   Sparkles, Check, Printer, RotateCcw, Search, Clock, 
-  AlertCircle, ChefHat, CheckCircle2, DollarSign
+  AlertCircle, ChefHat, CheckCircle2, DollarSign, ArrowLeft
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { saveSingleStoredOrder } from '../utils/persistentSync';
@@ -11,6 +11,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
   const [menuItems, setMenuItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileTab, setMobileTab] = useState('menu'); // 'menu' | 'ticket'
   
   // Ticket / Cart State
   const [ticketItems, setTicketItems] = useState([]);
@@ -100,6 +101,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
     setApplyReward(false);
     setLoyaltyCustomer(null);
     setErrorMsg(null);
+    setMobileTab('menu');
   };
 
   // Calculate totals
@@ -215,9 +217,9 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
   });
 
   return (
-    <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6">
-      {/* Top Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-amber-500/20">
+    <div className="max-w-7xl mx-auto py-2 sm:py-4 px-2 sm:px-6">
+      {/* Top Banner - hidden on mobile to eliminate double headings, clean on desktop */}
+      <div className="hidden sm:flex items-center justify-between pb-3 mb-3 border-b border-amber-500/20">
         <div>
           <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-500 text-black">
             COUNTER POS
@@ -244,20 +246,56 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
         </div>
       </div>
 
+      {/* Mobile Mode Switcher (Menu vs Ticket) */}
+      <div className="lg:hidden flex items-center bg-[#18110e] p-1 rounded-2xl border border-amber-500/25 mb-3 shadow-lg">
+        <button
+          type="button"
+          onClick={() => setMobileTab('menu')}
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            mobileTab === 'menu'
+              ? 'bg-amber-500 text-black shadow-md font-black'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <span>🍽️ Menu</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 font-mono">
+            {filteredItems.length}
+          </span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab('ticket')}
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 relative cursor-pointer ${
+            mobileTab === 'ticket'
+              ? 'bg-amber-500 text-black shadow-md font-black'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <span>🧾 Order Ticket</span>
+          {ticketItems.length > 0 && (
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-black ${
+              mobileTab === 'ticket' ? 'bg-black text-amber-400' : 'bg-amber-500 text-black'
+            }`}>
+              {totalItemCount} {grandTotal > 0 ? `• ₹${grandTotal}` : ''}
+            </span>
+          )}
+        </button>
+      </div>
+
       {/* Main Split Layout: Left Menu (7 Cols) + Right Order Ticket (5 Cols) */}
-      <div className="grid lg:grid-cols-12 gap-6 items-start">
+      <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start">
         {/* LEFT: Quick Menu Selection */}
-        <div className="lg:col-span-7 space-y-4">
+        <div className={`lg:col-span-7 space-y-3 ${mobileTab === 'menu' ? 'block' : 'hidden lg:block'}`}>
           {/* Category Filter Pills & Search */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex overflow-x-auto gap-1.5 pb-1 scrollbar-none whitespace-nowrap -mx-1 px-1">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                     activeCategory === cat.id
-                      ? 'bg-amber-500 text-black shadow-md font-black scale-105'
+                      ? 'bg-amber-500 text-black shadow-md font-black'
                       : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/15'
                   }`}
                 >
@@ -266,7 +304,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
               ))}
             </div>
 
-            <div className="relative w-full sm:w-48">
+            <div className="relative w-full sm:w-48 shrink-0">
               <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
               <input
                 type="text"
@@ -278,18 +316,17 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
             </div>
           </div>
 
-          {/* Menu Items Fast-Tap Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[640px] overflow-y-auto pr-1">
+          {/* Menu Items Fast-Tap Grid: 1-column on mobile phones (cards never shrink or distort!) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 max-h-[640px] overflow-y-auto pr-1">
             {filteredItems.map((item) => {
               const inTicket = ticketItems.find(i => i.id === item.id);
               const qty = inTicket ? inTicket.quantity : 0;
 
               return (
-                <button
+                <div
                   key={item.id}
-                  type="button"
                   onClick={() => handleAddItem(item)}
-                  className={`p-3.5 rounded-2xl text-left border transition-all duration-200 cursor-pointer flex flex-col justify-between relative group ${
+                  className={`p-3.5 rounded-2xl text-left border transition-all duration-200 cursor-pointer flex flex-col justify-between relative group select-none ${
                     qty > 0
                       ? 'bg-gradient-to-b from-[#2e1d13] to-[#1c110a] border-amber-400 ring-2 ring-amber-400/30 shadow-lg'
                       : 'bg-[#18110e] border-amber-500/15 hover:border-amber-500/40 hover:bg-[#201510]'
@@ -315,18 +352,66 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
                     <span className="text-sm font-bold font-serif text-amber-400">
                       ₹{item.price}
                     </span>
-                    <span className="text-[10px] text-zinc-400 group-hover:text-white flex items-center gap-0.5">
-                      <Plus className="w-3 h-3" /> Add
-                    </span>
+
+                    {qty > 0 ? (
+                      <div className="flex items-center gap-2 bg-black/60 px-2 py-0.5 rounded-xl border border-amber-500/40 shadow-inner">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateQuantity(item.id, qty - 1);
+                          }}
+                          className="w-5 h-5 rounded-md bg-zinc-800 hover:bg-zinc-700 active:scale-95 text-zinc-200 flex items-center justify-center font-bold text-xs cursor-pointer"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="font-bold font-mono text-xs text-amber-400 min-w-[14px] text-center">
+                          {qty}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddItem(item);
+                          }}
+                          className="w-5 h-5 rounded-md bg-amber-500 hover:bg-amber-400 active:scale-95 text-black flex items-center justify-center font-bold text-xs cursor-pointer"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddItem(item);
+                        }}
+                        className="text-xs text-amber-400 font-bold flex items-center gap-1 bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/20 group-hover:bg-amber-500 group-hover:text-black transition-colors cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Add
+                      </button>
+                    )}
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
         </div>
 
         {/* RIGHT: Active Order Ticket */}
-        <div className="lg:col-span-5 bg-[#160f0c] border-2 border-amber-500/30 rounded-3xl p-5 shadow-2xl space-y-4">
+        <div className={`lg:col-span-5 bg-[#160f0c] border-2 border-amber-500/30 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4 ${
+          mobileTab === 'ticket' ? 'block' : 'hidden lg:block'
+        }`}>
+          {/* Mobile Back Button */}
+          <button
+            type="button"
+            onClick={() => setMobileTab('menu')}
+            className="lg:hidden w-full py-2.5 px-4 mb-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-amber-300 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer border border-amber-500/20 shadow-md"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>← Back to Menu (Add More Items)</span>
+          </button>
+
           {/* Ticket Header & Type Selection */}
           <div className="pb-3 border-b border-amber-500/20 flex items-center justify-between">
             <div>
@@ -643,6 +728,32 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Mobile Sticky Floating Ticket Bar (when items in ticket and viewing Menu) */}
+      {ticketItems.length > 0 && mobileTab === 'menu' && (
+        <div className="lg:hidden fixed bottom-3 left-3 right-3 z-30 animate-in fade-in slide-in-from-bottom duration-200">
+          <button
+            type="button"
+            onClick={() => setMobileTab('ticket')}
+            className="w-full py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center justify-between shadow-2xl shadow-amber-500/50 cursor-pointer active:scale-[0.98] transition-all"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-black text-amber-400 font-mono text-xs flex items-center justify-center font-black">
+                {totalItemCount}
+              </span>
+              <span className="uppercase tracking-wider">
+                {totalItemCount === 1 ? '1 Item in Ticket' : `${totalItemCount} Items in Ticket`}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-serif font-black text-base">₹{grandTotal}</span>
+              <span className="bg-black text-amber-400 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1">
+                Punch Order →
+              </span>
+            </div>
+          </button>
         </div>
       )}
     </div>
