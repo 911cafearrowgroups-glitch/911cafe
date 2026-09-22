@@ -262,109 +262,96 @@ export default function StaffDashboard({ onClose, staffUser }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0908] text-white py-3 px-3 sm:py-6 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0d0908] text-white py-8 px-4 sm:px-6 lg:px-8">
       {/* Top Header */}
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-amber-500/20">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-wider bg-amber-500 text-black">
-                911 POS
-              </span>
-              <span className="text-xs text-amber-400 font-mono">
-                Staff Console
-              </span>
-            </div>
-            <h1 className="text-base sm:text-2xl font-serif font-black text-white mt-0.5 sm:mt-1">
-              Customer Loyalty & Counter POS
-            </h1>
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-amber-500/20">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500 text-black">
+              911 CAFE STAFF PORTAL
+            </span>
+            <span className="text-xs text-amber-400 font-mono">
+              Cashier POS Loyalty Console
+            </span>
           </div>
-
-          {/* Mobile Quick Exit */}
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="md:hidden flex items-center gap-1 px-2.5 py-1 rounded-xl bg-red-950/50 hover:bg-red-900/60 border border-red-500/30 text-red-300 text-xs font-bold transition-colors cursor-pointer"
-              title="Lock POS & return to website"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Exit</span>
-            </button>
-          )}
+          <h1 className="text-2xl sm:text-3xl font-serif font-black text-white mt-1">
+            Customer Visit & Offer Tracking Software
+          </h1>
+          <p className="text-xs text-zinc-400">
+            Rule: 5 Purchases recorded → 6th Visit qualifies for Free Treat offer
+          </p>
         </div>
 
-        {/* Action Controls Bar */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+        <div className="flex flex-wrap items-center gap-2.5">
           <select
             value={cashierName}
             onChange={(e) => setCashierName(e.target.value)}
-            className="text-xs bg-[#19110d] border border-amber-500/30 rounded-xl px-2.5 py-1.5 text-amber-300 focus:outline-none shrink-0"
+            className="text-xs bg-[#19110d] border border-amber-500/30 rounded-xl px-3 py-2 text-amber-300 focus:outline-none cursor-pointer"
           >
-            <option value="Counter Cashier 1">Cashier 1</option>
-            <option value="Counter Cashier 2">Cashier 2</option>
-            <option value="Manager Shift">Manager</option>
+            <option value="Counter Cashier 1">Counter Cashier 1</option>
+            <option value="Counter Cashier 2">Counter Cashier 2</option>
+            <option value="Manager Shift">Manager Shift</option>
           </select>
 
           <button
             onClick={() => setShowNewModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-md cursor-pointer shrink-0 whitespace-nowrap"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all shadow-md cursor-pointer"
           >
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span>+ Enroll Customer</span>
+            <PlusCircle className="w-4 h-4" /> Enroll New Customer
           </button>
 
           <button
             onClick={handleClearAllOrders}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
-            title="Delete all order history"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-950/20 hover:bg-red-900/30 border border-red-500/25 text-red-300 text-xs font-semibold transition-colors cursor-pointer"
+            title="Delete all test order history for production"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Clear Orders</span>
+            <Trash2 className="w-3.5 h-3.5 text-red-400" />
+            <span>Clear Orders</span>
           </button>
 
           {onClose && (
             <button
               onClick={onClose}
-              className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-950/20 hover:bg-red-900/30 border border-red-500/25 text-red-300 text-xs font-semibold transition-colors cursor-pointer"
               title="Lock POS & return to website"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Lock / Exit POS</span>
+              <LogOut className="w-3.5 h-3.5 text-red-400" />
+              <span>Exit POS</span>
             </button>
           )}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-3">
-        {/* Navigation Tabs for Staff - Single scrollable row on mobile */}
-        <div className="flex overflow-x-auto gap-2 mb-4 border-b border-amber-500/20 pb-2.5 scrollbar-none whitespace-nowrap">
+      <div className="max-w-7xl mx-auto mt-6">
+        {/* Navigation Tabs for Staff */}
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-amber-500/20 pb-4">
           <button
             type="button"
             onClick={() => handleTabSelect('take-order')}
-            className={`flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'take-order'
-                ? 'bg-amber-500 text-black shadow-lg font-black'
+                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <ClipboardList className="w-4 h-4" />
-            <span>📝 Take Order (POS)</span>
+            <span>📝 Take Order (Counter POS)</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleTabSelect('orders')}
-            className={`flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'orders'
-                ? 'bg-amber-500 text-black shadow-lg font-black'
+                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>🛎️ Kitchen Monitor</span>
+            <span>🛎️ Kitchen Waiting Monitor</span>
             {stats?.waitingOrders > 0 && (
               <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-mono font-black animate-pulse">
-                {stats.waitingOrders}
+                {stats.waitingOrders} Waiting
               </span>
             )}
           </button>
@@ -372,27 +359,27 @@ export default function StaffDashboard({ onClose, staffUser }) {
           <button
             type="button"
             onClick={() => handleTabSelect('balance')}
-            className={`flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'balance'
-                ? 'bg-amber-500 text-black shadow-lg font-black'
+                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <TrendingUp className="w-4 h-4" />
-            <span>📊 Daily Balance</span>
+            <span>📊 Daily Balance (Cash vs UPI)</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleTabSelect('loyalty')}
-            className={`flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'loyalty'
-                ? 'bg-amber-500 text-black shadow-lg font-black'
+                ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
                 : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/20'
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>💳 Loyalty Punch Cards</span>
+            <span>💳 Customer Loyalty & Punch Card POS</span>
           </button>
         </div>
 
