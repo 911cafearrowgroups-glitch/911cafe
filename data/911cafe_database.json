@@ -55,6 +55,20 @@
       "totalRewardsEarned": 1,
       "totalRewardsRedeemed": 1,
       "enrolledAt": "2026-09-22T11:50:14.922Z"
+    },
+    {
+      "id": "cust-1790078322036-783",
+      "name": "Priya Sharma",
+      "phone": "9999959927",
+      "email": "priya@test.com",
+      "favoriteItem": "Nutella Lava Crunch Waffle",
+      "stampsCount": 0,
+      "cycleCount": 2,
+      "rewardAvailable": false,
+      "totalVisits": 6,
+      "totalRewardsEarned": 1,
+      "totalRewardsRedeemed": 1,
+      "enrolledAt": "2026-09-22T11:58:42.036Z"
     }
   ],
   "stamps": [
@@ -217,6 +231,46 @@
       "note": "Purchase #5",
       "date": "2026-09-22T11:50:14.951Z",
       "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790078322040-372",
+      "customerId": "cust-1790078322036-783",
+      "stampNumber": 1,
+      "note": "Purchase #1",
+      "date": "2026-09-22T11:58:42.040Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790078322042-478",
+      "customerId": "cust-1790078322036-783",
+      "stampNumber": 2,
+      "note": "Purchase #2",
+      "date": "2026-09-22T11:58:42.042Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790078322045-120",
+      "customerId": "cust-1790078322036-783",
+      "stampNumber": 3,
+      "note": "Purchase #3",
+      "date": "2026-09-22T11:58:42.045Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790078322047-511",
+      "customerId": "cust-1790078322036-783",
+      "stampNumber": 4,
+      "note": "Purchase #4",
+      "date": "2026-09-22T11:58:42.047Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790078322049-601",
+      "customerId": "cust-1790078322036-783",
+      "stampNumber": 5,
+      "note": "Purchase #5",
+      "date": "2026-09-22T11:58:42.049Z",
+      "staff": "Counter Staff"
     }
   ],
   "redemptions": [
@@ -250,6 +304,14 @@
       "rewardTitle": "6th Visit Free Treat Applied on Order",
       "itemChosen": "Lotus Biscoff Waffle",
       "date": "2026-09-22T11:50:14.956Z",
+      "redeemedBy": "Counter POS"
+    },
+    {
+      "id": "rd-1790078322052",
+      "customerId": "cust-1790078322036-783",
+      "rewardTitle": "6th Visit Free Treat Applied on Order",
+      "itemChosen": "Lotus Biscoff Waffle",
+      "date": "2026-09-22T11:58:42.052Z",
       "redeemedBy": "Counter POS"
     }
   ],
@@ -684,5 +746,5 @@
     }
   ],
   "orders": [],
-  "clearedAt": 1790077814965
+  "clearedAt": 1790078322057
 }
