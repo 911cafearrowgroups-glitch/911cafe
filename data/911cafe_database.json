@@ -1,7 +1,134 @@
 {
-  "customers": [],
-  "stamps": [],
-  "redemptions": [],
+  "customers": [
+    {
+      "id": "cust-1790075417653-944",
+      "name": "Priya Sharma",
+      "phone": "9999918552",
+      "email": "priya@test.com",
+      "favoriteItem": "Nutella Lava Crunch Waffle",
+      "stampsCount": 0,
+      "cycleCount": 2,
+      "rewardAvailable": false,
+      "totalVisits": 6,
+      "totalRewardsEarned": 1,
+      "totalRewardsRedeemed": 1,
+      "enrolledAt": "2026-09-22T11:10:17.653Z"
+    },
+    {
+      "id": "cust-1790075450369-916",
+      "name": "Priya Sharma",
+      "phone": "9999969173",
+      "email": "priya@test.com",
+      "favoriteItem": "Nutella Lava Crunch Waffle",
+      "stampsCount": 0,
+      "cycleCount": 2,
+      "rewardAvailable": false,
+      "totalVisits": 6,
+      "totalRewardsEarned": 1,
+      "totalRewardsRedeemed": 1,
+      "enrolledAt": "2026-09-22T11:10:50.369Z"
+    }
+  ],
+  "stamps": [
+    {
+      "id": "st-1790075417655-819",
+      "customerId": "cust-1790075417653-944",
+      "stampNumber": 1,
+      "note": "Purchase #1",
+      "date": "2026-09-22T11:10:17.655Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075417661-437",
+      "customerId": "cust-1790075417653-944",
+      "stampNumber": 2,
+      "note": "Purchase #2",
+      "date": "2026-09-22T11:10:17.661Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075417662-538",
+      "customerId": "cust-1790075417653-944",
+      "stampNumber": 3,
+      "note": "Purchase #3",
+      "date": "2026-09-22T11:10:17.662Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075417664-506",
+      "customerId": "cust-1790075417653-944",
+      "stampNumber": 4,
+      "note": "Purchase #4",
+      "date": "2026-09-22T11:10:17.664Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075417670-740",
+      "customerId": "cust-1790075417653-944",
+      "stampNumber": 5,
+      "note": "Purchase #5",
+      "date": "2026-09-22T11:10:17.670Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075450371-32",
+      "customerId": "cust-1790075450369-916",
+      "stampNumber": 1,
+      "note": "Purchase #1",
+      "date": "2026-09-22T11:10:50.371Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075450374-914",
+      "customerId": "cust-1790075450369-916",
+      "stampNumber": 2,
+      "note": "Purchase #2",
+      "date": "2026-09-22T11:10:50.374Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075450378-638",
+      "customerId": "cust-1790075450369-916",
+      "stampNumber": 3,
+      "note": "Purchase #3",
+      "date": "2026-09-22T11:10:50.378Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075450382-30",
+      "customerId": "cust-1790075450369-916",
+      "stampNumber": 4,
+      "note": "Purchase #4",
+      "date": "2026-09-22T11:10:50.382Z",
+      "staff": "Counter Staff"
+    },
+    {
+      "id": "st-1790075450384-525",
+      "customerId": "cust-1790075450369-916",
+      "stampNumber": 5,
+      "note": "Purchase #5",
+      "date": "2026-09-22T11:10:50.384Z",
+      "staff": "Counter Staff"
+    }
+  ],
+  "redemptions": [
+    {
+      "id": "rd-1790075417676",
+      "customerId": "cust-1790075417653-944",
+      "rewardTitle": "6th Visit Free Treat Applied on Order",
+      "itemChosen": "Lotus Biscoff Waffle",
+      "date": "2026-09-22T11:10:17.676Z",
+      "redeemedBy": "Counter POS"
+    },
+    {
+      "id": "rd-1790075450385",
+      "customerId": "cust-1790075450369-916",
+      "rewardTitle": "6th Visit Free Treat Applied on Order",
+      "itemChosen": "Lotus Biscoff Waffle",
+      "date": "2026-09-22T11:10:50.385Z",
+      "redeemedBy": "Counter POS"
+    }
+  ],
   "menu": [
     {
       "id": "cw-1",
@@ -433,5 +560,5 @@
     }
   ],
   "orders": [],
-  "clearedAt": 1790073141216
+  "clearedAt": 1790075450392
 }

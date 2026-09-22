@@ -799,23 +799,6 @@ class Database {
     };
   }
 
-  validateStaffPin(pin) {
-    const validPins = ['7200', '9110'];
-    const cleanPin = (pin || '').trim();
-    if (validPins.includes(cleanPin)) {
-      return {
-        success: true,
-        user: '911 Counter Cashier',
-        role: 'Counter Staff',
-        token: `staff-${Date.now()}`
-      };
-    }
-    return {
-      success: false,
-      error: 'Invalid PIN. Please enter your 4-digit staff PIN.'
-    };
-  }
-
   updateOrderStatus(id, newStatus, staffNote = '', paymentMethod = null) {
     const order = this.data.orders.find(o => o.id === id);
     if (!order) throw new Error(`Order ${id} not found.`);
@@ -842,6 +825,7 @@ class Database {
 
     return {
       order,
+      status: newStatus,
       newStatus,
       paymentMethod: order.paymentMethod,
       message: `Order #${order.id} status updated to ${newStatus.replace(/_/g, ' ').toUpperCase()}`
@@ -940,6 +924,32 @@ class Database {
       outForDeliveryOrders,
       deliveredOrders,
       totalOrders
+    };
+  }
+
+  validateStaffPin(pin) {
+    const cleanPin = String(pin || '').trim();
+    const staffAccounts = {
+      '7200': { name: 'Counter Cashier 1', role: 'Cashier', id: 'staff-1' },
+      '9110': { name: 'Manager Shift', role: 'Manager', id: 'staff-admin' },
+      '1234': { name: 'Counter Cashier 2', role: 'Cashier', id: 'staff-2' },
+      '9111': { name: 'Counter Cashier', role: 'Cashier', id: 'staff-pos' }
+    };
+
+    const matched = staffAccounts[cleanPin];
+    if (matched) {
+      return {
+        success: true,
+        user: matched.name,
+        role: matched.role,
+        id: matched.id,
+        token: `staff-${Date.now()}`
+      };
+    }
+
+    return {
+      success: false,
+      error: 'Invalid Staff PIN. Please check and try again.'
     };
   }
 }
