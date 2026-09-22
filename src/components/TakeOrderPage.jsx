@@ -187,9 +187,9 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
   });
 
   return (
-    <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6">
-      {/* Top Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-amber-500/20">
+    <div className="max-w-7xl mx-auto py-2 sm:py-4 px-2 sm:px-4">
+      {/* Top Banner - hidden on mobile to eliminate double headings, clean on desktop */}
+      <div className="hidden sm:flex items-center justify-between pb-3 mb-3 border-b border-amber-500/20">
         <div>
           <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-500 text-black">
             COUNTER POS
@@ -201,35 +201,22 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
             Official 911 Cafe Menu • Auto-calculates 5+1 Loyalty Stamps & ₹10 Parcel fee
           </p>
         </div>
-
-        <div className="flex items-center gap-2">
-          {onSwitchToMonitor && (
-            <button
-              type="button"
-              onClick={onSwitchToMonitor}
-              className="px-3.5 py-2 rounded-xl bg-[#1d1410] hover:bg-[#281c16] text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md"
-            >
-              <Clock className="w-4 h-4 text-amber-400" />
-              <span>Kitchen Waiting Monitor</span>
-            </button>
-          )}
-        </div>
       </div>
 
       {/* Main Split Layout: Left Menu (7 Cols) + Right Order Ticket (5 Cols) */}
-      <div className="grid lg:grid-cols-12 gap-6 items-start">
+      <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start">
         {/* LEFT: Quick Menu Selection */}
-        <div className="lg:col-span-7 space-y-4">
+        <div className="lg:col-span-7 space-y-3">
           {/* Category Filter Pills & Search */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex overflow-x-auto gap-1.5 pb-1 scrollbar-none whitespace-nowrap -mx-1 px-1">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                     activeCategory === cat.id
-                      ? 'bg-amber-500 text-black shadow-md font-black scale-105'
+                      ? 'bg-amber-500 text-black shadow-md font-black'
                       : 'bg-[#18110e] text-zinc-400 hover:text-white border border-amber-500/15'
                   }`}
                 >
@@ -238,7 +225,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
               ))}
             </div>
 
-            <div className="relative w-full sm:w-48">
+            <div className="relative w-full sm:w-48 shrink-0">
               <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
               <input
                 type="text"
@@ -298,7 +285,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
         </div>
 
         {/* RIGHT: Active Order Ticket */}
-        <div className="lg:col-span-5 bg-[#160f0c] border-2 border-amber-500/30 rounded-3xl p-5 shadow-2xl space-y-4">
+        <div id="order-ticket" className="lg:col-span-5 bg-[#160f0c] border-2 border-amber-500/30 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
           {/* Ticket Header & Type Selection */}
           <div className="pb-3 border-b border-amber-500/20 flex items-center justify-between">
             <div>
@@ -616,6 +603,33 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Mobile Sticky Floating Ticket Bar */}
+      {ticketItems.length > 0 && (
+        <div className="lg:hidden fixed bottom-3 left-3 right-3 z-30">
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById('order-ticket');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="w-full py-2.5 px-4 rounded-2xl bg-amber-500 text-black font-extrabold text-xs flex items-center justify-between shadow-2xl shadow-amber-500/40 cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-black text-amber-400 font-mono text-xs flex items-center justify-center font-black">
+                {ticketItems.reduce((sum, i) => sum + (Number(i.quantity) || 1), 0)}
+              </span>
+              <span>Ticket Items</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-serif font-black text-sm">
+                ₹{ticketItems.reduce((sum, i) => sum + (Number(i.price) * (Number(i.quantity) || 1)), 0)}
+              </span>
+              <span className="underline font-bold">Punch Order ↓</span>
+            </div>
+          </button>
         </div>
       )}
     </div>
