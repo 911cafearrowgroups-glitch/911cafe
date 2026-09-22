@@ -244,6 +244,43 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
         </div>
       </div>
 
+      {/* Order Type Toggle: Dine-In / Parcel / Delivery - PROMINENT & NEVER HIDDEN ON MOBILE */}
+      <div className="mb-3">
+        <div className="grid grid-cols-3 gap-2 p-1.5 bg-[#18110e] border border-amber-500/30 rounded-2xl shadow-xl">
+          {[
+            { id: 'dine-in', label: '🍽️ Dine-In', note: '₹0 fee' },
+            { id: 'parcel', label: '📦 Parcel', note: '+₹10 fee' },
+            { id: 'delivery', label: '🛵 Delivery', note: '+₹10 fee' },
+          ].map((type) => (
+            <button
+              key={type.id}
+              type="button"
+              onClick={() => setOrderType(type.id)}
+              className={`py-2 px-1.5 rounded-xl text-center text-xs font-bold transition-all cursor-pointer ${
+                orderType === type.id
+                  ? 'bg-amber-500 text-black shadow-lg font-black scale-[1.02]'
+                  : 'bg-black/30 text-zinc-400 hover:text-white border border-white/5'
+              }`}
+            >
+              <div className="leading-tight text-xs font-extrabold">{type.label}</div>
+              <span className="text-[10px] font-mono opacity-85 block mt-0.5">{type.note}</span>
+            </button>
+          ))}
+        </div>
+
+        {orderType === 'delivery' && (
+          <div className="mt-2 animate-in fade-in duration-150">
+            <textarea
+              rows="2"
+              placeholder="Delivery Address & Customer Landmark..."
+              value={deliveryAddress}
+              onChange={(e) => setDeliveryAddress(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-400 resize-none"
+            />
+          </div>
+        )}
+      </div>
+
       {/* Main Split Layout: Left Menu (7 Cols) + Right Order Ticket (5 Cols) */}
       <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start">
         {/* LEFT: Quick Menu Selection */}
