@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Plus, Minus, Trash2, Phone, User, ShoppingBag, 
   Sparkles, Check, Printer, RotateCcw, Search, Clock, 
-  AlertCircle, ChefHat, CheckCircle2, DollarSign
+  AlertCircle, ChefHat, CheckCircle2, DollarSign, ArrowLeft
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { saveSingleStoredOrder } from '../utils/persistentSync';
@@ -13,6 +13,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
   const [searchQuery, setSearchQuery] = useState('');
   
   // Ticket / Cart State
+  const [mobileTab, setMobileTab] = useState('menu'); // 'menu' | 'ticket'
   const [ticketItems, setTicketItems] = useState([]);
   const [orderType, setOrderType] = useState('dine-in'); // 'dine-in' | 'parcel' | 'delivery'
   const [customerPhone, setCustomerPhone] = useState('');
@@ -245,8 +246,8 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
       </div>
 
       {/* Order Type Toggle: Dine-In / Parcel / Delivery - PROMINENT & NEVER HIDDEN ON MOBILE */}
-      <div className="mb-3">
-        <div className="grid grid-cols-3 gap-2 p-1.5 bg-[#18110e] border border-amber-500/30 rounded-2xl shadow-xl">
+      <div className="mb-3 w-full min-w-0">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 p-1.5 bg-[#18110e] border border-amber-500/30 rounded-2xl shadow-xl w-full">
           {[
             { id: 'dine-in', label: '🍽️ Dine-In', note: '₹0 fee' },
             { id: 'parcel', label: '📦 Parcel', note: '+₹10 fee' },
@@ -256,14 +257,14 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
               key={type.id}
               type="button"
               onClick={() => setOrderType(type.id)}
-              className={`py-2 px-1.5 rounded-xl text-center text-xs font-bold transition-all cursor-pointer ${
+              className={`py-2 px-1 rounded-xl text-center transition-all cursor-pointer min-w-0 ${
                 orderType === type.id
                   ? 'bg-amber-500 text-black shadow-lg font-black scale-[1.02]'
                   : 'bg-black/30 text-zinc-400 hover:text-white border border-white/5'
               }`}
             >
-              <div className="leading-tight text-xs font-extrabold">{type.label}</div>
-              <span className="text-[10px] font-mono opacity-85 block mt-0.5">{type.note}</span>
+              <div className="leading-tight text-[11px] sm:text-xs font-extrabold truncate">{type.label}</div>
+              <span className="text-[9px] sm:text-[10px] font-mono opacity-85 block mt-0.5">{type.note}</span>
             </button>
           ))}
         </div>
@@ -281,13 +282,52 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
         )}
       </div>
 
+      {/* Mobile View Switcher (lg:hidden) */}
+      <div className="lg:hidden flex gap-2 mb-3 w-full min-w-0 p-1 bg-[#18110e] rounded-2xl border border-amber-500/20 shadow-md">
+        <button
+          type="button"
+          onClick={() => setMobileTab('menu')}
+          className={`flex-1 py-2 px-2 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            mobileTab === 'menu'
+              ? 'bg-amber-500 text-black shadow-lg font-black'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <span>🍽️ Menu Items</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+            mobileTab === 'menu' ? 'bg-black text-amber-400' : 'bg-black/40 text-zinc-400'
+          }`}>
+            {filteredItems.length}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMobileTab('ticket')}
+          className={`flex-1 py-2 px-2 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-1.5 cursor-pointer relative ${
+            mobileTab === 'ticket'
+              ? 'bg-amber-500 text-black shadow-lg font-black'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <span>🧾 Order Details</span>
+          {ticketItems.length > 0 && (
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-black ${
+              mobileTab === 'ticket' ? 'bg-black text-amber-400' : 'bg-amber-500 text-black animate-pulse'
+            }`}>
+              {totalItemCount} • ₹{grandTotal}
+            </span>
+          )}
+        </button>
+      </div>
+
       {/* Main Split Layout: Left Menu (7 Cols) + Right Order Ticket (5 Cols) */}
-      <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+      <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start w-full min-w-0">
         {/* LEFT: Quick Menu Selection */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className={`lg:col-span-7 space-y-3 w-full min-w-0 ${mobileTab === 'menu' ? 'block' : 'hidden lg:block'}`}>
           {/* Category Filter Pills & Search */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-            <div className="flex overflow-x-auto gap-1.5 pb-1 scrollbar-none whitespace-nowrap -mx-1 px-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full min-w-0">
+            <div className="flex overflow-x-auto gap-1.5 pb-1 scrollbar-none whitespace-nowrap w-full min-w-0 -mx-1 px-1">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
@@ -316,7 +356,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
           </div>
 
           {/* Menu Items Fast-Tap Grid: 1-column on mobile phones (cards never shrink or distort!) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 max-h-[640px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-3 w-full min-w-0 pb-16 lg:pb-0">
             {filteredItems.map((item) => {
               const inTicket = ticketItems.find(i => i.id === item.id);
               const qty = inTicket ? inTicket.quantity : 0;
@@ -326,7 +366,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
                   key={item.id}
                   type="button"
                   onClick={() => handleAddItem(item)}
-                  className={`p-3.5 rounded-2xl text-left border transition-all duration-200 cursor-pointer flex flex-col justify-between relative group ${
+                  className={`w-full min-w-0 box-border p-3 sm:p-3.5 rounded-2xl text-left border transition-all duration-150 cursor-pointer flex flex-col justify-between relative group ${
                     qty > 0
                       ? 'bg-gradient-to-b from-[#2e1d13] to-[#1c110a] border-amber-400 ring-2 ring-amber-400/30 shadow-lg'
                       : 'bg-[#18110e] border-amber-500/15 hover:border-amber-500/40 hover:bg-[#201510]'
@@ -339,21 +379,21 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
                     </span>
                   )}
 
-                  <div>
+                  <div className="w-full min-w-0">
                     <span className="text-[9px] uppercase font-bold text-amber-400/80 block">
                       {item.categoryLabel || item.category}
                     </span>
-                    <h4 className="text-xs font-bold text-white leading-tight mt-0.5 group-hover:text-amber-300">
+                    <h4 className="text-xs font-bold text-white leading-tight mt-0.5 group-hover:text-amber-300 truncate">
                       {item.name}
                     </h4>
                   </div>
 
-                  <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-sm font-bold font-serif text-amber-400">
+                  <div className="w-full mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between">
+                    <span className="text-sm font-bold font-serif text-amber-400 shrink-0">
                       ₹{item.price}
                     </span>
-                    <span className="text-[10px] text-zinc-400 group-hover:text-white flex items-center gap-0.5 font-bold">
-                      <Plus className="w-3 h-3" /> Add
+                    <span className="text-xs font-bold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-xl border border-amber-500/25 flex items-center gap-1 shrink-0 group-hover:bg-amber-500 group-hover:text-black transition-colors">
+                      <Plus className="w-3.5 h-3.5" /> Add
                     </span>
                   </div>
                 </button>
@@ -363,9 +403,20 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
         </div>
 
         {/* RIGHT: Active Order Ticket */}
-        <div className="lg:col-span-5 bg-[#160f0c] border-2 border-amber-500/30 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
+        <div className={`lg:col-span-5 bg-[#160f0c] border-2 border-amber-500/30 rounded-3xl p-3.5 sm:p-5 shadow-2xl space-y-3.5 w-full min-w-0 ${
+          mobileTab === 'ticket' ? 'block' : 'hidden lg:block'
+        }`}>
+          {/* Mobile Back Button */}
+          <button
+            type="button"
+            onClick={() => setMobileTab('menu')}
+            className="lg:hidden w-full py-2.5 px-3 mb-1 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer border border-amber-500/20 shadow-md"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>← Back to Menu (Add More Items)</span>
+          </button>
 
-          {/* Ticket Header & Type Selection */}
+          {/* Ticket Header */}
           <div className="pb-3 border-b border-amber-500/20 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
@@ -383,29 +434,6 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
                 Clear
               </button>
             )}
-          </div>
-
-          {/* Order Type Toggle */}
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { id: 'dine-in', label: '🍽️ Dine-In', note: '₹0 fee' },
-              { id: 'parcel', label: '📦 Parcel', note: '+₹10 fee' },
-              { id: 'delivery', label: '🛵 Delivery', note: '+₹10 fee' },
-            ].map((type) => (
-              <button
-                key={type.id}
-                type="button"
-                onClick={() => setOrderType(type.id)}
-                className={`p-2 rounded-xl text-center text-xs font-bold transition-all cursor-pointer ${
-                  orderType === type.id
-                    ? 'bg-amber-500 text-black shadow-md font-black'
-                    : 'bg-black/40 text-zinc-400 border border-white/10'
-                }`}
-              >
-                <div className="leading-tight">{type.label}</div>
-                <span className="text-[9px] font-normal opacity-80">{type.note}</span>
-              </button>
-            ))}
           </div>
 
           {/* Customer Details: Fast Counter Billing */}
@@ -625,6 +653,29 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
           </button>
         </div>
       </div>
+
+      {/* Sticky Bottom Floating Ticket Bar on Mobile (when in Menu mode and has items) */}
+      {ticketItems.length > 0 && mobileTab === 'menu' && (
+        <div className="lg:hidden fixed bottom-3 left-3 right-3 z-40 animate-in fade-in slide-in-from-bottom duration-150">
+          <button
+            type="button"
+            onClick={() => setMobileTab('ticket')}
+            className="w-full py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 active:scale-[0.99] text-black font-black text-xs flex items-center justify-between shadow-2xl shadow-amber-500/50 cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-black text-amber-400 font-mono text-xs flex items-center justify-center font-black">
+                {totalItemCount}
+              </span>
+              <span className="uppercase tracking-wider font-extrabold">
+                {totalItemCount === 1 ? '1 Item' : `${totalItemCount} Items`} • ₹{grandTotal}
+              </span>
+            </div>
+            <span className="bg-black text-amber-400 px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1">
+              View Order & Punch →
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* POPUP: Order Confirmation & Print Slip */}
       {lastPunchedOrder && (
