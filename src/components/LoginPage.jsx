@@ -164,30 +164,6 @@ export default function LoginPage({ onLoginSuccess }) {
             </div>
           )}
 
-          {/* Quick PIN Selector Hints */}
-          <div className="flex items-center justify-center gap-2 pt-1">
-            <span className="text-[11px] text-zinc-500">Quick Fill:</span>
-            <button
-              type="button"
-              onClick={() => {
-                setPin('7200');
-                submitPin('7200');
-              }}
-              className="px-2.5 py-1 rounded-xl bg-[#221610] hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer"
-            >
-              Cashier (7200)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setPin('9110');
-                submitPin('9110');
-              }}
-              className="px-2.5 py-1 rounded-xl bg-[#221610] hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold transition-all cursor-pointer"
-            >
-              Manager (9110)
-            </button>
-          </div>
 
           {/* Touch Number Pad */}
           <div className="grid grid-cols-3 gap-2 sm:gap-2.5 pt-2">
