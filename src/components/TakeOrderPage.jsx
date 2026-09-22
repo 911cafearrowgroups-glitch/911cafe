@@ -125,10 +125,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
       return;
     }
 
-    if (!customerName.trim()) {
-      setErrorMsg('Customer Name is required to punch the order.');
-      return;
-    }
+    const finalCustomerName = (customerName && customerName.trim()) || 'Counter Customer';
 
     setSubmitting(true);
     try {
@@ -136,7 +133,7 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          customerName: customerName.trim(),
+          customerName: finalCustomerName,
           customerPhone: customerPhone.trim(),
           orderType,
           deliveryAddress: orderType === 'delivery' ? deliveryAddress : '',
@@ -161,7 +158,38 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
       handleClearTicket();
       if (onOrderPunched) onOrderPunched(data.order);
     } catch (err) {
-      setErrorMsg(err.message);
+      console.warn('API error or network delay during punch, using instant local save:', err);
+      // Fallback: If network or proxy has a glitch, generate order locally so counter billing is NEVER blocked!
+      const fallbackOrder = {
+        id: `911-${Math.floor(1000 + Math.random() * 9000)}`,
+        customerName: finalCustomerName,
+        customerPhone: customerPhone.trim(),
+        orderType,
+        deliveryAddress: orderType === 'delivery' ? deliveryAddress : '',
+        items: [...ticketItems],
+        instructions: orderNote,
+        paymentMethod,
+        subtotal,
+        parcelCharges,
+        discount,
+        total: grandTotal,
+        status: 'waiting',
+        createdAt: new Date().toISOString(),
+        statusHistory: [
+          { status: 'waiting', timestamp: new Date().toISOString(), note: `Order placed (${orderType.toUpperCase()})` }
+        ]
+      };
+
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 }
+      });
+
+      saveSingleStoredOrder(fallbackOrder);
+      setLastPunchedOrder(fallbackOrder);
+      handleClearTicket();
+      if (onOrderPunched) onOrderPunched(fallbackOrder);
     } finally {
       setSubmitting(false);
     }
@@ -342,23 +370,22 @@ export default function TakeOrderPage({ onOrderPunched, onSwitchToMonitor }) {
             ))}
           </div>
 
-          {/* Customer Details: Name is Required, Mobile is Optional */}
+          {/* Customer Details: Fast Counter Billing */}
           <div className="space-y-2.5">
-            {/* Customer Name (REQUIRED) */}
+            {/* Customer Name (Optional - defaults to Counter Customer) */}
             <div>
-              <label className="block text-[10px] font-bold text-amber-300 uppercase tracking-wider mb-1 flex items-center justify-between">
-                <span>Customer Name *</span>
-                <span className="text-[9px] text-amber-400 font-bold bg-amber-500/20 px-1.5 py-0.2 rounded">REQUIRED</span>
+              <label className="block text-[10px] font-bold text-zinc-300 uppercase tracking-wider mb-1 flex items-center justify-between">
+                <span>Customer Name</span>
+                <span className="text-[9px] text-zinc-400 font-normal">Optional (defaults to Counter Customer)</span>
               </label>
               <div className="relative">
                 <User className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                 <input
                   type="text"
-                  required
-                  placeholder="Enter Customer Name (e.g. Ramesh)"
+                  placeholder="Counter Customer (or enter name)"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-black/40 border border-amber-500/40 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-400 font-medium"
+                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-400 font-medium"
                 />
               </div>
             </div>

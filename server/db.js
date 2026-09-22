@@ -663,9 +663,7 @@ class Database {
     paymentMethod = 'cash',
     applyLoyaltyReward = false
   }) {
-    if (!customerName || !customerName.trim()) {
-      throw new Error('Customer Name is required.');
-    }
+    const finalCustomerName = (customerName && customerName.trim()) || 'Counter Customer';
 
     if (!items || items.length === 0) {
       throw new Error('Order must have at least 1 item.');
@@ -673,16 +671,20 @@ class Database {
 
     const cleanPhone = (customerPhone || '').replace(/\D/g, '');
     let customer = null;
-    if (cleanPhone) {
+    if (cleanPhone && cleanPhone.length >= 7) {
       customer = this.getCustomerByPhone(cleanPhone);
       // Auto-enroll customer if new
       if (!customer) {
-        customer = this.enrollCustomer({
-          name: customerName.trim(),
-          phone: cleanPhone,
-          email: '',
-          favoriteItem: items[0]?.name || 'Belgium Chocolate Waffle'
-        });
+        try {
+          customer = this.enrollCustomer({
+            name: finalCustomerName,
+            phone: cleanPhone,
+            email: '',
+            favoriteItem: items[0]?.name || 'Belgium Chocolate Waffle'
+          });
+        } catch (e) {
+          console.warn('Auto-enroll skipped for order:', e.message);
+        }
       }
     }
 
@@ -716,7 +718,7 @@ class Database {
 
     const newOrder = {
       id: orderId,
-      customerName: (customerName || (customer ? customer.name : 'Counter Customer')).trim(),
+      customerName: finalCustomerName,
       customerPhone: cleanPhone,
       customerId: customer?.id || null,
       orderType, // 'dine-in' | 'parcel' | 'delivery'
