@@ -12,7 +12,23 @@ import DailyBalanceReport from './DailyBalanceReport';
 import { getStoredCustomers, saveStoredCustomers, triggerServerSync, clearStoredOrders } from '../utils/persistentSync';
 
 export default function StaffDashboard({ onClose, staffUser }) {
-  const [activeTab, setActiveTab] = useState('take-order'); // 'take-order' | 'orders' | 'balance' | 'loyalty'
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      const saved = localStorage.getItem('911_staff_active_tab');
+      if (saved && ['take-order', 'orders', 'balance', 'loyalty'].includes(saved)) {
+        return saved;
+      }
+    } catch (e) {}
+    return 'take-order';
+  });
+
+  const handleTabSelect = (tab) => {
+    setActiveTab(tab);
+    try {
+      localStorage.setItem('911_staff_active_tab', tab);
+    } catch (e) {}
+  };
+
   const [stats, setStats] = useState(null);
   const [customers, setCustomers] = useState(() => getStoredCustomers());
   const [searchQuery, setSearchQuery] = useState('');
@@ -311,7 +327,7 @@ export default function StaffDashboard({ onClose, staffUser }) {
         <div className="flex flex-wrap gap-2 mb-6 border-b border-amber-500/20 pb-4">
           <button
             type="button"
-            onClick={() => setActiveTab('take-order')}
+            onClick={() => handleTabSelect('take-order')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'take-order'
                 ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
@@ -324,7 +340,7 @@ export default function StaffDashboard({ onClose, staffUser }) {
 
           <button
             type="button"
-            onClick={() => setActiveTab('orders')}
+            onClick={() => handleTabSelect('orders')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'orders'
                 ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
@@ -342,7 +358,7 @@ export default function StaffDashboard({ onClose, staffUser }) {
 
           <button
             type="button"
-            onClick={() => setActiveTab('balance')}
+            onClick={() => handleTabSelect('balance')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'balance'
                 ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
@@ -355,7 +371,7 @@ export default function StaffDashboard({ onClose, staffUser }) {
 
           <button
             type="button"
-            onClick={() => setActiveTab('loyalty')}
+            onClick={() => handleTabSelect('loyalty')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'loyalty'
                 ? 'bg-amber-500 text-black shadow-lg font-black scale-105'
@@ -370,7 +386,7 @@ export default function StaffDashboard({ onClose, staffUser }) {
         {activeTab === 'take-order' ? (
           <TakeOrderPage 
             onOrderPunched={() => fetchStats()} 
-            onSwitchToMonitor={() => setActiveTab('orders')} 
+            onSwitchToMonitor={() => handleTabSelect('orders')} 
           />
         ) : activeTab === 'orders' ? (
           <OrderMonitor />

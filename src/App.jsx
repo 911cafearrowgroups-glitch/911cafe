@@ -15,9 +15,29 @@ import { triggerServerSync } from './utils/persistentSync';
 import { ShieldCheck, ArrowLeft, Sparkles, ShoppingBag, Check, Smartphone, Monitor } from 'lucide-react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('website'); // 'website' | 'staff'
+  const [authenticatedStaff, setAuthenticatedStaff] = useState(() => {
+    try {
+      const savedStaff = localStorage.getItem('911_staff_user');
+      if (savedStaff) {
+        return JSON.parse(savedStaff);
+      }
+    } catch (e) {}
+    return null;
+  });
+
+  const [currentView, setCurrentView] = useState(() => {
+    try {
+      const savedView = localStorage.getItem('911_current_view');
+      const savedStaff = localStorage.getItem('911_staff_user');
+      const hash = window.location.hash;
+      if ((savedView === 'staff' || hash === '#staff' || hash === '#pos') && savedStaff) {
+        return 'staff';
+      }
+    } catch (e) {}
+    return 'website';
+  });
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [authenticatedStaff, setAuthenticatedStaff] = useState(null);
   const [currentCustomer, setCurrentCustomer] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -83,6 +103,41 @@ export default function App() {
     fetchWaitingCount();
   };
 
+  const handleOpenStaffLogin = () => {
+    if (authenticatedStaff) {
+      try {
+        localStorage.setItem('911_current_view', 'staff');
+        window.location.hash = 'staff';
+      } catch (e) {}
+      setCurrentView('staff');
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
+
+  const handleStaffLogout = () => {
+    setAuthenticatedStaff(null);
+    try {
+      localStorage.removeItem('911_staff_user');
+      localStorage.setItem('911_current_view', 'website');
+      if (window.location.hash === '#staff' || window.location.hash === '#pos') {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    } catch (e) {}
+    setCurrentView('website');
+  };
+
+  const handleLoginSuccess = (staff) => {
+    setAuthenticatedStaff(staff);
+    try {
+      localStorage.setItem('911_staff_user', JSON.stringify(staff));
+      localStorage.setItem('911_current_view', 'staff');
+      window.location.hash = 'staff';
+    } catch (e) {}
+    setIsLoginModalOpen(false);
+    setCurrentView('staff');
+  };
+
   const totalCartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -127,17 +182,14 @@ export default function App() {
             {/* Staff POS & Live Order Monitor Mode */}
             <StaffDashboard 
               staffUser={authenticatedStaff}
-              onClose={() => {
-                setAuthenticatedStaff(null);
-                setCurrentView('website');
-              }} 
+              onClose={handleStaffLogout} 
             />
           </div>
         ) : (
           <div>
             {/* Public Cafe Website */}
             <Navbar 
-              onOpenStaffLogin={() => setIsLoginModalOpen(true)}
+              onOpenStaffLogin={handleOpenStaffLogin}
               cartItemCount={totalCartCount}
               onOpenCart={() => setIsCartOpen(true)}
               waitingOrdersCount={waitingOrdersCount}
@@ -157,13 +209,13 @@ export default function App() {
               <AboutSection />
             </main>
 
-            <Footer onOpenStaffLogin={() => setIsLoginModalOpen(true)} />
+            <Footer onOpenStaffLogin={handleOpenStaffLogin} />
 
             {/* Mobile App Bottom Navigation Bar */}
             <MobileBottomNav
               cartItemCount={totalCartCount}
               onOpenCart={() => setIsCartOpen(true)}
-              onOpenStaffLogin={() => setIsLoginModalOpen(true)}
+              onOpenStaffLogin={handleOpenStaffLogin}
               waitingOrdersCount={waitingOrdersCount}
             />
 
@@ -183,11 +235,7 @@ export default function App() {
             <PosLoginModal
               isOpen={isLoginModalOpen}
               onClose={() => setIsLoginModalOpen(false)}
-              onLoginSuccess={(staff) => {
-                setAuthenticatedStaff(staff);
-                setIsLoginModalOpen(false);
-                setCurrentView('staff');
-              }}
+              onLoginSuccess={handleLoginSuccess}
             />
 
             {/* Cart & Checkout Drawer */}
