@@ -40,13 +40,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    // Immediately sync with serverless backend
+    // Sync on initial load
     triggerServerSync();
     fetchWaitingCount();
-    const interval = setInterval(() => {
-      fetchWaitingCount();
-      triggerServerSync();
-    }, 5000);
+    const interval = setInterval(fetchWaitingCount, 5000);
     return () => clearInterval(interval);
   }, []);
 

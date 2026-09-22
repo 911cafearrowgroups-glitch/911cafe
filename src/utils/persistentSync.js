@@ -98,18 +98,19 @@ export function saveSingleStoredOrder(newOrder) {
 
 export function updateStoredOrderStatus(orderId, newStatus, paymentMethod) {
   const existing = getStoredOrders();
+  const nowIso = new Date().toISOString();
   const updated = existing.map(o => {
     if (o.id === orderId) {
       return {
         ...o,
         status: newStatus,
-        paymentMethod: paymentMethod || o.paymentMethod || 'cash'
+        paymentMethod: paymentMethod || o.paymentMethod || 'cash',
+        updatedAt: nowIso
       };
     }
     return o;
   });
   saveStoredOrders(updated);
-  triggerServerSync();
   return updated;
 }
 

@@ -8,6 +8,13 @@ const isVercel = process.env.VERCEL === '1' || !!process.env.VERCEL;
 const DATA_DIR = isVercel ? '/tmp' : path.join(__dirname, '..', 'data');
 const DB_FILE = path.join(DATA_DIR, '911cafe_database.json');
 
+export const STATUS_RANK = {
+  'waiting': 1,
+  'preparing': 2,
+  'out_for_delivery': 3,
+  'delivered': 4
+};
+
 // OFFICIAL MENU ITEMS AS PER 911 CAFE MENU BOARD
 const OFFICIAL_MENU = [
   // 1. CLASSIC WAFFLES (₹89)
@@ -313,8 +320,15 @@ class Database {
         if (!existing) {
           this.data.orders.push(o);
         } else {
-          existing.status = o.status || existing.status;
-          existing.paymentMethod = o.paymentMethod || existing.paymentMethod;
+          const currentRank = STATUS_RANK[existing.status] || 0;
+          const incomingRank = STATUS_RANK[o.status] || 0;
+          if (incomingRank > currentRank) {
+            existing.status = o.status;
+            existing.updatedAt = o.updatedAt || new Date().toISOString();
+          }
+          if (o.paymentMethod) {
+            existing.paymentMethod = o.paymentMethod;
+          }
           if (Array.isArray(o.statusHistory) && o.statusHistory.length > (existing.statusHistory?.length || 0)) {
             existing.statusHistory = o.statusHistory;
           }
@@ -683,7 +697,38 @@ class Database {
     return {
       success: false,
       error: 'Invalid PIN. Please enter your 4-digit staff PIN.'
- `Order #${order.id} status updated to ${newStatus.replace(/_/g, ' ').toUpperCase()}`
+    };
+  }
+
+  updateOrderStatus(id, newStatus, staffNote = '', paymentMethod = null) {
+    const order = this.data.orders.find(o => o.id === id);
+    if (!order) throw new Error(`Order ${id} not found.`);
+
+    const nowIso = new Date().toISOString();
+    order.status = newStatus;
+    order.updatedAt = nowIso;
+    if (paymentMethod && ['cash', 'upi'].includes(paymentMethod.toLowerCase())) {
+      order.paymentMethod = paymentMethod.toLowerCase();
+    }
+
+    let note = staffNote;
+    if (!note) {
+      if (newStatus === 'preparing') note = 'Baking on waffle iron';
+      else if (newStatus === 'out_for_delivery') note = 'Dispatched / ready for pickup';
+      else if (newStatus === 'delivered') note = `Completed & Delivered (Paid via ${order.paymentMethod ? order.paymentMethod.toUpperCase() : 'CASH'})`;
+    }
+
+    if (!Array.isArray(order.statusHistory)) {
+      order.statusHistory = [];
+    }
+    order.statusHistory.push({ status: newStatus, timestamp: nowIso, note });
+    this.save();
+
+    return {
+      order,
+      newStatus,
+      paymentMethod: order.paymentMethod,
+      message: `Order #${order.id} status updated to ${newStatus.replace(/_/g, ' ').toUpperCase()}`
     };
   }
 

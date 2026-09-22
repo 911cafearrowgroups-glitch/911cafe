@@ -10,6 +10,13 @@ import {
   triggerServerSync, clearStoredOrders, getStoredClearedAt 
 } from '../utils/persistentSync';
 
+const STATUS_RANK = {
+  'waiting': 1,
+  'preparing': 2,
+  'out_for_delivery': 3,
+  'delivered': 4
+};
+
 export default function OrderMonitor() {
   const [orders, setOrders] = useState(() => getStoredOrders());
   const [filter, setFilter] = useState('active'); // 'active' | 'waiting' | 'preparing' | 'out_for_delivery' | 'delivered' | 'all'
@@ -44,16 +51,34 @@ export default function OrderMonitor() {
         if (serverOrders.length === 0 && validLocalOrders.length === 0) {
           setOrders([]);
           saveStoredOrders([]);
-        } else if (validLocalOrders.length > serverOrders.length) {
-          triggerServerSync();
-          const serverIds = new Set(serverOrders.map(o => o.id));
+        } else {
+          const localMap = new Map(validLocalOrders.map(o => [o.id, o]));
+          const resolvedServerOrders = (serverOrders || []).map(so => {
+            const lo = localMap.get(so.id);
+            if (!lo) return so;
+            const sRank = STATUS_RANK[so.status] || 0;
+            const lRank = STATUS_RANK[lo.status] || 0;
+            if (lRank > sRank) {
+              return {
+                ...so,
+                status: lo.status,
+                paymentMethod: lo.paymentMethod || so.paymentMethod,
+                updatedAt: lo.updatedAt || so.updatedAt
+              };
+            }
+            return so;
+          });
+
+          const serverIds = new Set(resolvedServerOrders.map(o => o.id));
           const missing = validLocalOrders.filter(o => !serverIds.has(o.id));
-          const merged = [...serverOrders, ...missing];
+          const merged = [...resolvedServerOrders, ...missing];
+
+          if (validLocalOrders.length > serverOrders.length) {
+            triggerServerSync();
+          }
+
           setOrders(merged);
           saveStoredOrders(merged);
-        } else {
-          setOrders(serverOrders);
-          saveStoredOrders(serverOrders);
         }
         
         const currentWaiting = (serverOrders || []).filter(o => o.status === 'waiting').length;
@@ -127,6 +152,10 @@ export default function OrderMonitor() {
             spread: 60,
             origin: { y: 0.6 }
           });
+        }
+        if (data.order) {
+          setOrders(prev => prev.map(o => o.id === orderId ? { ...o, ...data.order } : o));
+          updateStoredOrderStatus(orderId, data.order.status || newStatus, data.order.paymentMethod || paymentMethod);
         }
         await fetchOrders();
       }
